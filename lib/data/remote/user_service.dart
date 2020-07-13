@@ -14,4 +14,17 @@ class UserService {
       },
     );
   }
+
+  Future<Response> signUp(String displayName, String phone, String pass,
+      {String avatar}) {
+    return WineClient.instance.dio.post(
+      '/api/user/sign-up',
+      data: {
+        'displayName': displayName,
+        'phone': phone,
+        'password': pass,
+        'avatar': avatar,
+      },
+    );
+  }
 }

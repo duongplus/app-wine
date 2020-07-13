@@ -30,4 +30,25 @@ class UserRepo {
     }
     return c.future;
   }
+
+  Future<UserData> signUp(String displayName, String phone, String pass,
+      {String avatar}) async {
+    Completer c = Completer<UserData>();
+    try {
+      var response =
+          await _userService.signUp(displayName, phone, pass, avatar: avatar);
+      var userData = UserData.fromJson(response.data['data']);
+      if (userData != null) {
+        SPref.instance.set(SPrefCache.KEY_TOKEN, userData.token);
+        c.complete(userData);
+      }
+    } on DioError catch (e) {
+      //TODO: Loi network
+      c.completeError(e.response.data);
+    } catch (e) {
+      //TODO:
+      c.completeError(e);
+    }
+    return c.future;
+  }
 }

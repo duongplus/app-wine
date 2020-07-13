@@ -7,4 +7,9 @@ class Validation {
   static isPassValid(String pass) {
     return pass.length > 5;
   }
+
+  static isDisplayName(String name){
+    final regexName = RegExp(r'^[a-zA-Z]+$');
+    return regexName.hasMatch(name) && name.length > 5;
+  }
 }

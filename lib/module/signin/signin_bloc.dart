@@ -32,7 +32,7 @@ class SignInBloc extends BaseBloc {
 
   var passValidation = StreamTransformer<String, String>.fromHandlers(
     handleData: (pass, sink) {
-      if (Validation.isPhoneValid(pass)) {
+      if (Validation.isPassValid(pass)) {
         sink.add(null);
         return;
       }
