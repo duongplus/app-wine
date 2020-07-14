@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'module/signup/signup_page.dart';
 import 'module/signin/signin_page.dart';
 
 void main() => runApp(MyApp());
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "wine app",
-      home: SignInPage(),
+      home: SignUpPage(),
     );
   }
 }

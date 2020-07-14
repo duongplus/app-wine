@@ -5,7 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:wine_app/base/base_bloc.dart';
 import 'package:wine_app/base/base_event.dart';
 import 'package:wine_app/data/repo/user_repo.dart';
-import 'package:wine_app/event/signin_event.dart';
+import 'package:wine_app/event/signin/signin_event.dart';
 import 'package:wine_app/shared/validation.dart';
 
 class SignInBloc extends BaseBloc {
