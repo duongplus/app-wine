@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class ColorLoader2 extends StatefulWidget {
+class ColorLoader extends StatefulWidget {
 
   final Color color1;
   final Color color2;
   final Color color3;
 
-  ColorLoader2({this.color1 = Colors.deepOrangeAccent, this.color2 = Colors.yellow, this.color3 = Colors.lightGreen});
+  ColorLoader({this.color1 = Colors.deepOrangeAccent, this.color2 = Colors.yellow, this.color3 = Colors.lightGreen});
 
   @override
-  _ColorLoader2State createState() => _ColorLoader2State();
+  _ColorLoaderState createState() => _ColorLoaderState();
 }
 
-class _ColorLoader2State extends State<ColorLoader2> with TickerProviderStateMixin {
+class _ColorLoaderState extends State<ColorLoader> with TickerProviderStateMixin {
 
   Animation<double> animation1;
   Animation<double> animation2;
