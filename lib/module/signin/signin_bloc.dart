@@ -12,6 +12,7 @@ class SignInBloc extends BaseBloc {
   final _phoneSubject = BehaviorSubject<String>();
   final _passSubject = BehaviorSubject<String>();
   final _btnSubject = BehaviorSubject<bool>();
+  final _teddySubject = BehaviorSubject<String>();
 
   UserRepo _userRepo;
 
@@ -54,6 +55,10 @@ class SignInBloc extends BaseBloc {
 
   Sink<bool> get btnSink => _btnSubject.sink;
 
+  Stream<String> get teddyStream => _teddySubject.stream;
+
+  Sink<String> get teddySink => _teddySubject.sink;
+
   validateForm() {
     Observable.combineLatest2(
       _phoneSubject,
@@ -82,9 +87,11 @@ class SignInBloc extends BaseBloc {
     _userRepo.signIn(e.phone, e.pass).then(
       (userData) {
         print(userData.token);
+        teddySink.add('success');
       },
       onError: (e) {
         print(e);
+        teddySink.add('fail');
       },
     );
   }
@@ -96,5 +103,6 @@ class SignInBloc extends BaseBloc {
     _phoneSubject.close();
     _passSubject.close();
     _btnSubject.close();
+    _teddySubject.close();
   }
 }

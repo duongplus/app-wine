@@ -1,3 +1,4 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wine_app/base/base_widget.dart';
@@ -41,88 +42,115 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
     return Provider<SignUpBloc>.value(
       value: SignUpBloc(userRepo: Provider.of(context)),
       child: Consumer<SignUpBloc>(
-        builder: (context, bloc, child) => Container(
-          child: Column(
-            children: <Widget>[
-              StreamProvider.value(
-                value: bloc.displayNameStream,
-                initialData: null,
-                child: Consumer<String>(
-                  builder: (context, msg, child) => _buildField(
-                      "Display Name",
-                      "Nguyen Van A",
-                      Icon(
-                        Icons.account_box,
-                        color: AppColor.blue,
+        builder: (context, bloc, child) => SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.all(15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                StreamProvider.value(
+                  value: bloc.teddyStream,
+                  initialData: 'idle',
+                  child: Consumer<String>(
+                    builder: (context, type, child) =>
+                        _buildTeddy(context, bloc, type),
+                  ),
+                ),
+                StreamProvider.value(
+                  value: bloc.displayNameStream,
+                  initialData: null,
+                  child: Consumer<String>(
+                    builder: (context, msg, child) => _buildField(
+                        "Display Name",
+                        "Nguyen Van A",
+                        Icon(
+                          Icons.account_box,
+                          color: AppColor.blue,
+                        ),
+                        TextInputType.text,
+                        false,
+                        _txtDisplayNameController,
+                        (displayName) {
+                          bloc.displayNameSink.add(displayName);
+                        },
+                        msg,
+                        () {
+                          bloc.teddySink.add('test');
+                        }),
+                  ),
+                ),
+                StreamProvider.value(
+                  value: bloc.phoneStream,
+                  child: Consumer<String>(
+                    builder: (context, msg, child) => _buildField(
+                        'Phone',
+                        '(+84) 933 505 575',
+                        Icon(
+                          Icons.phone,
+                          color: AppColor.blue,
+                        ),
+                        TextInputType.phone,
+                        false,
+                        _txtPhoneController,
+                        (phone) {
+                          bloc.phoneSink.add(phone);
+                        },
+                        msg,
+                        () {
+                          bloc.teddySink.add('test');
+                        }),
+                  ),
+                ),
+                StreamProvider.value(
+                  value: bloc.passStream,
+                  child: Consumer<String>(
+                    builder: (context, msg, child) => _buildField(
+                        'Password',
+                        '',
+                        Icon(
+                          Icons.lock,
+                          color: AppColor.blue,
+                        ),
+                        TextInputType.visiblePassword,
+                        true,
+                        _txtPassController,
+                        (pass) {
+                          bloc.passSink.add(pass);
+                        },
+                        msg,
+                        () {
+                          bloc.teddySink.add('hands_up');
+                        }),
+                  ),
+                ),
+                StreamProvider.value(
+                  value: bloc.btnStream,
+                  initialData: false,
+                  child: Consumer<bool>(
+                    builder: (context, enable, child) => Container(
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.only(top: 10),
+                      child: NormalButton(
+                        onPressed: enable
+                            ? () {
+                                bloc.event.add(
+                                  SignUpEvent(
+                                    displayName: _txtDisplayNameController.text,
+                                    phone: _txtPhoneController.text,
+                                    pass: _txtPassController.text,
+                                  ),
+                                );
+                              }
+                            : null,
+                        title: 'Sign Up',
                       ),
-                      TextInputType.text,
-                      false,
-                      _txtDisplayNameController, (displayName) {
-                    bloc.displayNameSink.add(displayName);
-                  }, msg),
-                ),
-              ),
-              StreamProvider.value(
-                value: bloc.phoneStream,
-                child: Consumer<String>(
-                  builder: (context, msg, child) => _buildField(
-                    'Phone',
-                    '(+84) 933 505 575',
-                    Icon(
-                      Icons.phone,
-                      color: AppColor.blue,
                     ),
-                    TextInputType.phone,
-                    false,
-                    _txtPhoneController,
-                    (phone) {
-                      bloc.phoneSink.add(phone);
-                    },
-                    msg,
                   ),
                 ),
-              ),
-              StreamProvider.value(
-                value: bloc.passStream,
-                child: Consumer<String>(
-                  builder: (context, msg, child) => _buildField(
-                    'Password',
-                    '',
-                    Icon(
-                      Icons.lock,
-                      color: AppColor.blue,
-                    ),
-                    TextInputType.visiblePassword,
-                    true,
-                    _txtPassController,
-                    (pass) {
-                      bloc.passSink.add(pass);
-                    },
-                    msg,
-                  ),
-                ),
-              ),
-              StreamProvider.value(
-                value: bloc.btnStream,
-                initialData: false,
-                child: Consumer<bool>(
-                  builder: (context, enable, child) => NormalButton(
-                    onPressed: enable
-                        ? () {
-                            bloc.event.add(
-                              SignUpEvent(
-                                displayName: _txtDisplayNameController.text,
-                                phone: _txtPhoneController.text,
-                                pass: _txtPassController.text,
-                              ),
-                            );
-                          }
-                        : null,
-                    title: 'Sign Up',
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -137,7 +165,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       bool isPass,
       TextEditingController controller,
       Function onChange,
-      String errText) {
+      String errText,
+      Function onTap) {
     return TextFormField(
       controller: controller,
       onChanged: onChange,
@@ -146,6 +175,27 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       keyboardType: inputType,
       decoration: InputDecoration(
           hintText: hint, labelText: label, icon: icon, errorText: errText),
+      onTap: onTap,
+    );
+  }
+
+  _buildTeddy(BuildContext context, bloc, type) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          bloc.teddySink.add('hands_down');
+        },
+        child: Container(
+          height: 200,
+          width: 300,
+          child: FlareActor(
+            "assets/teddy_test.flr",
+            alignment: Alignment.center,
+            fit: BoxFit.cover,
+            animation: type,
+          ),
+        ),
+      ),
     );
   }
 }

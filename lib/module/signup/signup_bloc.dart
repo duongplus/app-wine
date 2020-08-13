@@ -12,7 +12,8 @@ class SignUpBloc extends BaseBloc {
   final _displayNameSubject = BehaviorSubject<String>();
   final _phoneSubject = BehaviorSubject<String>();
   final _passSubject = BehaviorSubject<String>();
-  final _btnSignUp = BehaviorSubject<bool>();
+  final _btnSubject = BehaviorSubject<bool>();
+  final _teddySubject = BehaviorSubject<String>();
 
   Stream<String> get displayNameStream =>
       _displayNameSubject.stream.transform(displayNameValidation);
@@ -29,9 +30,13 @@ class SignUpBloc extends BaseBloc {
 
   Sink<String> get passSink => _passSubject.sink;
 
-  Stream<bool> get btnStream => _btnSignUp.stream;
+  Stream<bool> get btnStream => _btnSubject.stream;
 
-  Sink<bool> get btnSink => _btnSignUp.sink;
+  Sink<bool> get btnSink => _btnSubject.sink;
+
+  Stream<String> get teddyStream => _teddySubject.stream;
+
+  Sink<String> get teddySink => _teddySubject.sink;
 
   UserRepo _userRepo;
 
@@ -102,9 +107,11 @@ class SignUpBloc extends BaseBloc {
     _userRepo.signUp(e.displayName, e.phone, e.pass, avatar: e.avatar).then(
       (userData) {
         print(userData.token);
+        teddySink.add('success');
       },
       onError: (e) {
         print(e);
+        teddySink.add('fail');
       },
     );
   }
@@ -116,6 +123,7 @@ class SignUpBloc extends BaseBloc {
     _displayNameSubject.close();
     _phoneSubject.close();
     _passSubject.close();
-    _btnSignUp.close();
+    _btnSubject.close();
+    _teddySubject.close();
   }
 }
