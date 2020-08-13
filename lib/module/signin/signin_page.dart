@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wine_app/base/base_event.dart';
 import 'package:wine_app/base/base_widget.dart';
 import 'package:wine_app/data/remote/user_service.dart';
 import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/signin/signin_event.dart';
+import 'package:wine_app/event/signin/signin_fail_event.dart';
+import 'package:wine_app/event/signin/signin_sucess_event.dart';
 import 'package:wine_app/module/signin/signin_bloc.dart';
 import 'package:wine_app/shared/app_color.dart';
+import 'package:wine_app/shared/widget/bloc_listener.dart';
+import 'package:wine_app/shared/widget/loading_task.dart';
 import 'package:wine_app/shared/widget/normal_button.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
@@ -54,21 +59,26 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
     return Provider<SignInBloc>.value(
       value: SignInBloc(userRepo: Provider.of(context)),
       child: Consumer<SignInBloc>(
-        builder: (context, bloc, child) => Container(
-          padding: EdgeInsets.all(15),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _buildTeddy(bloc),
-                _buildPhoneField(bloc),
-                _buildPasswordField(bloc),
-                _buildButton(bloc),
-                _buildFooter(context),
-              ],
+        builder: (context, bloc, child) => BlocListener<SignInBloc>(
+          listener: handleEvent,
+          child: LoadingTask(
+            bloc: bloc,
+            child: SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _buildTeddy(bloc),
+                    _buildPhoneField(bloc),
+                    _buildPasswordField(bloc),
+                    _buildButton(bloc),
+                    _buildFooter(context),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -225,5 +235,20 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
         ),
       ),
     );
+  }
+
+  handleEvent(BaseEvent event) {
+    if (event is SignInSuccessEvent) {
+      Navigator.pushReplacementNamed(context, '/home');
+      return;
+    }
+
+    if (event is SignInFailEvent) {
+      final snackBar = SnackBar(
+        content: Text(event.errMessage),
+        backgroundColor: Colors.red,
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
   }
 }

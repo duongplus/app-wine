@@ -1,12 +1,17 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wine_app/base/base_event.dart';
 import 'package:wine_app/base/base_widget.dart';
 import 'package:wine_app/data/remote/user_service.dart';
 import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/signup/signup_event.dart';
+import 'package:wine_app/event/signup/signup_fail_event.dart';
+import 'package:wine_app/event/signup/signup_sucess_event.dart';
 import 'package:wine_app/module/signup/signup_bloc.dart';
 import 'package:wine_app/shared/app_color.dart';
+import 'package:wine_app/shared/widget/bloc_listener.dart';
+import 'package:wine_app/shared/widget/loading_task.dart';
 import 'package:wine_app/shared/widget/normal_button.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -44,20 +49,26 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
     return Provider<SignUpBloc>.value(
       value: SignUpBloc(userRepo: Provider.of(context)),
       child: Consumer<SignUpBloc>(
-        builder: (context, bloc, child) => SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _buildTeddy(bloc),
-                _buildDisplayNameField(bloc),
-                _buildPhoneField(bloc),
-                _buildPasswordField(bloc),
-                _buildButton(bloc),
-              ],
+        builder: (context, bloc, child) => BlocListener<SignUpBloc>(
+          listener: handleEvent,
+          child: LoadingTask(
+            bloc: bloc,
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.all(15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _buildTeddy(bloc),
+                    _buildDisplayNameField(bloc),
+                    _buildPhoneField(bloc),
+                    _buildPasswordField(bloc),
+                    _buildButton(bloc),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -214,5 +225,24 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
         ),
       ),
     );
+  }
+
+  handleEvent(BaseEvent event) {
+    if (event is SignUpSuccessEvent) {
+//      Navigator.pushAndRemoveUntil(
+//        context,
+//        MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+//        ModalRoute.withName('/home'),
+//      );
+      return;
+    }
+
+    if (event is SignUpFailEvent) {
+      final snackBar = SnackBar(
+        content: Text(event.errMessage),
+        backgroundColor: Colors.red,
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
   }
 }

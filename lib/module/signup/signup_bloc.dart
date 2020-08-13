@@ -6,6 +6,8 @@ import 'package:wine_app/base/base_bloc.dart';
 import 'package:wine_app/base/base_event.dart';
 import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/signup/signup_event.dart';
+import 'package:wine_app/event/signup/signup_fail_event.dart';
+import 'package:wine_app/event/signup/signup_sucess_event.dart';
 import 'package:wine_app/shared/validation.dart';
 
 class SignUpBloc extends BaseBloc {
@@ -103,17 +105,25 @@ class SignUpBloc extends BaseBloc {
   }
 
   handleSignUp(event) {
-    SignUpEvent e = event as SignUpEvent;
-    _userRepo.signUp(e.displayName, e.phone, e.pass, avatar: e.avatar).then(
-      (userData) {
-        print(userData.token);
-        teddySink.add('success');
-      },
-      onError: (e) {
-        print(e);
-        teddySink.add('fail');
-      },
-    );
+    btnSink.add(false);
+    loadingSink.add(true);
+    Future.delayed(Duration(seconds: 6), (){
+      SignUpEvent e = event as SignUpEvent;
+      _userRepo.signUp(e.displayName, e.phone, e.pass, avatar: e.avatar).then(
+            (userData) {
+          print(userData.token);
+          teddySink.add('success');
+          processEventSink.add(SignUpSuccessEvent(userData));
+        },
+        onError: (e) {
+          print(e);
+          teddySink.add('fail');
+          loadingSink.add(false);
+          btnSink.add(true);
+          processEventSink.add(SignUpFailEvent(e.toString()));
+        },
+      );
+    });
   }
 
   @override
