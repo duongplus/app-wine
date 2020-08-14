@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wine_app/shared/app_color.dart';
+import 'module/home/home_page.dart';
 import 'module/signup/signup_page.dart';
 import 'module/signin/signin_page.dart';
 
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
           '/': (context) => SignInPage(),
+          '/home': (context) => HomePage(),
           '/sign-in': (context) => SignInPage(),
           '/sign-up': (context) => SignUpPage(),
         },
