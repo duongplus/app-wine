@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:wine_app/module/admin/switch_page.dart';
+import 'package:wine_app/module/home/home_page.dart';
+import 'package:wine_app/module/splash/splash.dart';
 import 'package:wine_app/shared/app_color.dart';
-import 'module/home/home_page.dart';
+import 'module/admin/admin_home_page.dart';
+import 'module/home/main_container_page.dart';
+import 'module/home/tabdemo.dart';
 import 'module/signup/signup_page.dart';
 import 'module/signin/signin_page.dart';
 
@@ -19,14 +24,15 @@ class MyApp extends StatelessWidget {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: AppColor.yellow,
-        ),
+//        theme: ThemeData(
+//          primarySwatch: Colors.white,
+//        ),
         title: "wine app",
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
-          '/': (context) => SignInPage(),
-          '/home': (context) => HomePage(),
+          '/': (context) => SplashPage(),
+          '/switch': (context) => SwitchPage(),
+          '/home': (context) => HomeContainerPage(),
           '/sign-in': (context) => SignInPage(),
           '/sign-up': (context) => SignUpPage(),
         },

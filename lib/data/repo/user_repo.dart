@@ -51,4 +51,54 @@ class UserRepo {
     }
     return c.future;
   }
+
+  Future<int> changeName(String displayName,) async {
+    Completer c = Completer<int>();
+    try {
+      var response = await _userService.changeDisplayName(displayName);
+      var status = response.data['status'];
+      c.complete(status);
+    } on DioError catch (e) {
+      //TODO: Loi network
+      c.completeError(e.response.data);
+    } catch (e) {
+      //TODO:
+      c.completeError(e);
+    }
+    return c.future;
+  }
+
+  Future<int> changePassword(String password, String newPass) async {
+    Completer c = Completer<int>();
+    try {
+      var response = await _userService.changePass(password, newPass);
+      var status = response.data['status'];
+      c.complete(status);
+    } on DioError catch (e) {
+      //TODO: Loi network
+      c.completeError(e.response.data['status']);
+    } catch (e) {
+      //TODO:
+      c.completeError(e);
+    }
+    return c.future;
+  }
+
+  Future<List<UserData>> findAllUser() async {
+    Completer c = Completer<List<UserData>>();
+    try {
+      var response = await _userService.findAllUser();
+      var list = UserData.parseUserList(response.data['data']);
+      c.complete(list);
+    } on DioError catch (e) {
+      //TODO: Loi network
+      c.completeError(e.response.data['data'].toString());
+      print(e);
+    } catch (e) {
+      //TODO:
+      c.completeError(e.toString());
+      print(e);
+    }
+    return c.future;
+  }
 }

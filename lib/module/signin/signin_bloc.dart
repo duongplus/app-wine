@@ -8,6 +8,8 @@ import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/signin/signin_event.dart';
 import 'package:wine_app/event/signin/signin_fail_event.dart';
 import 'package:wine_app/event/signin/signin_sucess_event.dart';
+import 'package:wine_app/module/signin/signin_page.dart';
+import 'package:wine_app/shared/model/user_data.dart';
 import 'package:wine_app/shared/validation.dart';
 
 class SignInBloc extends BaseBloc {
@@ -29,7 +31,7 @@ class SignInBloc extends BaseBloc {
         sink.add(null);
         return;
       }
-      sink.add('Phone invalid');
+      sink.add('Số điện thoại không hợp lệ');
     },
   );
 
@@ -39,7 +41,7 @@ class SignInBloc extends BaseBloc {
         sink.add(null);
         return;
       }
-      sink.add('Password too short');
+      sink.add('Mật khẩu không hợp lệ');
     },
   );
 
@@ -88,11 +90,11 @@ class SignInBloc extends BaseBloc {
     btnSink.add(false);
     loadingSink.add(true);
 
-    Future.delayed(Duration(seconds: 6), () {
+    Future.delayed(Duration(seconds: 1), () {
       SignInEvent e = event as SignInEvent;
       _userRepo.signIn(e.phone, e.pass).then(
             (userData) {
-          print(userData.token);
+              UserData.u = userData;
           teddySink.add('success');
           processEventSink.add(SignInSuccessEvent(userData));
         },

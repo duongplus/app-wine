@@ -48,7 +48,7 @@ class SignUpBloc extends BaseBloc {
       sink.add(null);
       return;
     }
-    sink.add('Display name invalid');
+    sink.add('Tên không hợp lệ');
   });
 
   var phoneValidation = StreamTransformer<String, String>.fromHandlers(
@@ -57,7 +57,7 @@ class SignUpBloc extends BaseBloc {
         sink.add(null);
         return;
       }
-      sink.add('Phone invalid');
+      sink.add('Số điện thoại không hợp lệ');
     },
   );
 
@@ -67,7 +67,7 @@ class SignUpBloc extends BaseBloc {
         sink.add(null);
         return;
       }
-      sink.add('Password too short');
+      sink.add('Mật khẩu không hợp lệ');
     },
   );
 

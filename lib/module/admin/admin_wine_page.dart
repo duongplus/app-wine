@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:random_color/random_color.dart';
+import 'package:wine_app/module/admin/admin_add_wine_page.dart';
+import 'package:wine_app/module/admin/admin_bloc.dart';
 import 'package:wine_app/module/detail/detail_page.dart';
 import 'package:wine_app/shared/constants.dart';
 import 'package:wine_app/shared/model/cate.dart';
@@ -12,30 +14,45 @@ import 'package:wine_app/shared/model/wine.dart';
 import 'package:wine_app/shared/widget/normal_button.dart';
 import 'package:wine_app/shared/widget/xoayxoay.dart';
 
-import 'home_bloc.dart';
+import 'admin_wine_detail_page.dart';
 
-class HomePage extends StatefulWidget {
+
+class WinePage extends StatefulWidget {
+  AdminBloc bloc;
+  WinePage({this.bloc});
   @override
-  _HomePageState createState() => _HomePageState();
+  _WinePageState createState() => _WinePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _WinePageState extends State<WinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Quản lý rượu'),
         elevation: 1,
-        backgroundColor: Colors.white,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add, color: Colors.white,),
+            onPressed: (){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminAddWineScreen(bloc: widget.bloc ),
+                  ));
+            },
+          )
+        ],
       ),
       backgroundColor: Colors.white,
-      body: Body(),
+      body: Body(bloc: widget.bloc,),
     );
   }
 }
 
 class Body extends StatefulWidget {
-  static List<Cate> cates = List<Cate>();
-
+  AdminBloc bloc;
+  Body({this.bloc});
   @override
   _BodyState createState() => _BodyState();
 }
@@ -43,16 +60,15 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
-    print("object");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
-          child: Text("Rượu Vang - Đẳng cấp và quý phái ", style: TextStyle(fontSize: 35)),
-        ),
-        Categories(Body.cates),
-        Wines(Body.cates),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+        //   child: Text("Rượu Vang - Đẳng cấp và quý phái ", style: TextStyle(fontSize: 35)),
+        // ),
+        Categories( widget.bloc),
+        Wines(widget.bloc),
       ],
     );
   }
@@ -60,9 +76,8 @@ class _BodyState extends State<Body> {
 
 class Wines extends StatefulWidget {
   String cateId;
-  List<Cate> cs;
-
-  Wines(this.cs);
+  AdminBloc bloc;
+  Wines(this.bloc);
 
   @override
   _WinesState createState() => _WinesState();
@@ -75,69 +90,68 @@ class _WinesState extends State<Wines> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ws.clear();
+    // ws.clear();
   }
   @override
   Future<void> didChangeDependencies()  {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    print("Home page didChangeDependencies");
-    ws.clear();
-    var bloc = Provider.of<HomeBloc>(context);
-    cates = bloc.getCateList();
-    bloc.getUserProfile();
-    ws = cates.length > 0 ? bloc.getWineListByCateId("1"):ws = List<Wine>();
-    bloc.getShoppingCartList();
+    // print("Home page didChangeDependencies");
+    // ws.clear();
+    // var bloc = Provider.of<HomeBloc>(context);
+    // cates = bloc.getCateList();
+    // bloc.getUserProfile();
+    // ws = cates.length > 0 ? bloc.getWineListByCateId("1"):ws = List<Wine>();
+    // bloc.getShoppingCartList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeBloc>(
-      builder: (context, bloc, child) => StreamProvider<String>.value(
-        value: bloc.cateIdStream,
-        initialData: cates.length > 0 ? cates[0].cateId : null,
-        child: Consumer<String>(
-          builder: (context, cid, child) => StreamProvider.value(
-            initialData: ws,
-            value: bloc.getStreamWineList(cid),
-            child: Consumer<List<Wine>>(
-              builder: (context, wines, child) {
-                if (wines == null) {
-                  return Center(
-                    child: ColorLoader(),
-                  );
-                }
-                return Expanded(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
-                    child: GridView.builder(
-                        itemCount: wines.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: kDefaultPaddin,
-                          crossAxisSpacing: kDefaultPaddin,
-                          childAspectRatio: 0.65,
-                        ),
-                        itemBuilder: (context, index) => ItemCard(
-                            wine: wines[index],
-                            press: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DetailsScreen(
-                                      product: wines[index],
-                                    ),
-                                  ));
+    return StreamProvider<String>.value(
+      value: widget.bloc.cateIdStream,
+      initialData: cates.length > 0 ? cates[0].cateId : null,
+      child: Consumer<String>(
+        builder: (context, cid, child) => StreamProvider.value(
+          initialData: ws,
+          value: widget.bloc.getStreamWineList(cid),
+          child: Consumer<List<Wine>>(
+            builder: (context, wines, child) {
+              if (wines == null) {
+                return Center(
+                  child: ColorLoader(),
+                );
+              }
+              return Expanded(
+                child: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+                  child: GridView.builder(
+                      itemCount: wines.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: kDefaultPaddin,
+                        crossAxisSpacing: kDefaultPaddin,
+                        childAspectRatio: 0.65,
+                      ),
+                      itemBuilder: (context, index) => ItemCard(
+                          wine: wines[index],
+                          press: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AdminWineDetailsScreen(
+                                    product: wines[index],
+                                    bloc: widget.bloc,
+                                  ),
+                                ));
 //                        print(bloc.doingSomething());
-                            }
+                          }
 
 //                      ),
-                            )),
-                  ),
-                );
-              },
-            ),
+                      )),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -146,9 +160,9 @@ class _WinesState extends State<Wines> {
 }
 
 class Categories extends StatefulWidget {
-  List<Cate> cs;
 
-  Categories(this.cs);
+  AdminBloc bloc;
+  Categories(this.bloc);
 
   @override
   _CategoriesState createState() => _CategoriesState();
@@ -156,7 +170,6 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
   static int selectedIndex = 0;
-  HomeBloc bloc;
   @override
   void initState() {
     // TODO: implement initState
@@ -167,44 +180,41 @@ class _CategoriesState extends State<Categories> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    bloc = Provider.of<HomeBloc>(context);
-//    categories = bloc.getCateList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeBloc>(
-      builder: (context, bl, child) => StreamProvider.value(
-        value: bl.getStreamCateList(),
-        initialData: null,
-        catchError: (context, error) {
-          return error;
-        },
-        child: Consumer<Object>(builder: (context, data, child) {
-          if (data == null) {
-            return Center(
-              child: ColorLoader(),
-            );
-          }
-          var cates = data as List<Cate>;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
-            child: SizedBox(
-              height: 25,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: cates.length,
-                itemBuilder: (context, index) =>
-                    buildCategory(index, cates, bl),
-              ),
-            ),
+    return StreamProvider.value(
+      value: widget.bloc.getStreamCateList(),
+      initialData: null,
+      catchError: (context, error) {
+        return error;
+      },
+      child: Consumer<Object>(builder: (context, data, child) {
+        if (data == null) {
+          return Center(
+            child: ColorLoader(),
           );
-        }),
-      ),
+        }
+        var cates = data as List<Cate>;
+        Cate.cates = cates;
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
+          child: SizedBox(
+            height: 25,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: cates.length,
+              itemBuilder: (context, index) =>
+                  buildCategory(index, cates, widget.bloc),
+            ),
+          ),
+        );
+      }),
     );
   }
 
-  Widget buildCategory(int index, List<Cate> cates, HomeBloc bloc) {
+  Widget buildCategory(int index, List<Cate> cates, AdminBloc bloc) {
     return GestureDetector(
       onTap: () {
         setState(() {

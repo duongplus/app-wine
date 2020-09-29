@@ -7,14 +7,17 @@ import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/signin/signin_event.dart';
 import 'package:wine_app/event/signin/signin_fail_event.dart';
 import 'package:wine_app/event/signin/signin_sucess_event.dart';
+import 'package:wine_app/module/home/main_container_page.dart';
 import 'package:wine_app/module/signin/signin_bloc.dart';
 import 'package:wine_app/shared/app_color.dart';
+import 'package:wine_app/shared/model/user_data.dart';
 import 'package:wine_app/shared/widget/bloc_listener.dart';
 import 'package:wine_app/shared/widget/loading_task.dart';
 import 'package:wine_app/shared/widget/normal_button.dart';
 import 'package:flare_flutter/flare_actor.dart';
 
 class SignInPage extends StatelessWidget {
+  static UserData userData;
   @override
   Widget build(BuildContext context) {
     return PageContainer(
@@ -27,7 +30,7 @@ class SignInPage extends StatelessWidget {
         ),
       ],
       actions: <Widget>[],
-      title: 'Sign In',
+      title: 'Đăng nhập',
       child: SignInFormWidget(),
     );
   }
@@ -163,7 +166,7 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
       value: bloc.phoneStream,
       child: Consumer<String>(
         builder: (context, msg, child) => _buildField(
-          'Phone',
+          'Số điện thoại',
           '(+84) 933 505 575',
           Icon(
             Icons.phone,
@@ -190,7 +193,7 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
       initialData: null,
       child: Consumer<String>(
         builder: (context, msg, child) => _buildField(
-          'Password',
+          'Mật khẩu',
           '',
           Icon(
             Icons.lock,
@@ -230,7 +233,7 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
                     );
                   }
                 : null,
-            title: 'Sign In',
+            title: 'Đăng nhập',
           ),
         ),
       ),
@@ -239,6 +242,10 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
 
   handleEvent(BaseEvent event) {
     if (event is SignInSuccessEvent) {
+      if(event.userData.role == "ADMIN"){
+        Navigator.pushReplacementNamed(context, '/switch');
+        return;
+      }
       Navigator.pushReplacementNamed(context, '/home');
       return;
     }

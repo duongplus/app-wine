@@ -27,4 +27,29 @@ class UserService {
       },
     );
   }
+
+  Future<Response> changePass(String password, String newPass) {
+    return WineClient.instance.dio.post(
+      '/api/user/change-pass',
+      data: {
+        "password": password,
+        "newPass": newPass,
+      },
+    );
+  }
+
+  Future<Response> changeDisplayName(String name) {
+    return WineClient.instance.dio.post(
+      '/api/user/change-name',
+      data: {
+        'name': name,
+      },
+    );
+  }
+
+  Future<Response> findAllUser() {
+    return WineClient.instance.dio.get(
+      '/api/user/all-user',
+    );
+  }
 }

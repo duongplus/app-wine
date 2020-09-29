@@ -8,6 +8,7 @@ import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/signup/signup_event.dart';
 import 'package:wine_app/event/signup/signup_fail_event.dart';
 import 'package:wine_app/event/signup/signup_sucess_event.dart';
+import 'package:wine_app/module/home/main_container_page.dart';
 import 'package:wine_app/module/signup/signup_bloc.dart';
 import 'package:wine_app/shared/app_color.dart';
 import 'package:wine_app/shared/widget/bloc_listener.dart';
@@ -18,7 +19,7 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageContainer(
-      title: 'Sign Up',
+      title: 'Đăng ký',
       actions: <Widget>[],
       di: [
         Provider.value(value: UserService()),
@@ -130,7 +131,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       initialData: null,
       child: Consumer<String>(
         builder: (context, msg, child) => _buildField(
-            "Display Name",
+            "Tên hiển thị",
             "Nguyen Van A",
             Icon(
               Icons.account_box,
@@ -155,7 +156,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       value: bloc.phoneStream,
       child: Consumer<String>(
         builder: (context, msg, child) => _buildField(
-            'Phone',
+            'Số điện thoại',
             '(+84) 933 505 575',
             Icon(
               Icons.phone,
@@ -180,7 +181,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       value: bloc.passStream,
       child: Consumer<String>(
         builder: (context, msg, child) => _buildField(
-            'Password',
+            'Mật khẩu',
             '',
             Icon(
               Icons.lock,
@@ -220,7 +221,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                     );
                   }
                 : null,
-            title: 'Sign Up',
+            title: 'Đăng ký',
           ),
         ),
       ),
@@ -229,11 +230,11 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
 
   handleEvent(BaseEvent event) {
     if (event is SignUpSuccessEvent) {
-//      Navigator.pushAndRemoveUntil(
-//        context,
-//        MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-//        ModalRoute.withName('/home'),
-//      );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => HomeContainerPage()),
+        ModalRoute.withName('/home'),
+      );
       return;
     }
 
