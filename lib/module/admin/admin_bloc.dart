@@ -9,6 +9,7 @@ import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/data/repo/wine_repo.dart';
 import 'package:wine_app/event/admin/admin_add_wine.dart';
 import 'package:wine_app/event/admin/admin_get_revenue.dart';
+import 'package:wine_app/event/admin/admin_password_recovery.dart';
 import 'package:wine_app/event/admin/admin_update_wine.dart';
 import 'package:wine_app/event/admin/admin_user_list_call.dart';
 import 'package:wine_app/shared/model/cate.dart';
@@ -89,7 +90,17 @@ class AdminBloc extends BaseBloc {
       case AdminGetRevenue:
         handleAdminGetRevenue(event);
         break;
+      case AdminPasswordRecovery:
+        handleAdminPasswordRecovery(event);
+        break;
     }
+  }
+
+  handleAdminPasswordRecovery(event){
+    AdminPasswordRecovery e = event as AdminPasswordRecovery;
+    _userRepo.passwordRecovery(e.phone).then((status) {
+      statusSink.add(status);
+    }, onError: (e) {});
   }
 
   handleAdminGetRevenue(event) {
@@ -128,6 +139,10 @@ class AdminBloc extends BaseBloc {
 
   Stream<List<Revenue>> getRevenueList(month) {
     return Stream<List<Revenue>>.fromFuture(_orderRepo.getRevenues(month));
+  }
+
+  Stream<List<Wine>> getStreamWines() {
+    return Stream<List<Wine>>.fromFuture(_wineRepo.getWines());
   }
 
   @override

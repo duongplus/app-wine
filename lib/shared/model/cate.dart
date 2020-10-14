@@ -8,7 +8,7 @@ class Cate {
 
   factory Cate.fromJson(Map<String, dynamic> json) {
     return Cate(
-      cateId: json["cateId"],
+      cateId: json["_id"]['\$oid'],
       cateName: json["cateName"],
     );
   }

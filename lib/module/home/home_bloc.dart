@@ -22,7 +22,9 @@ class HomeBloc extends BaseBloc {
   var _shoppingCart = ShoppingCart();
 
   final _cateIdSubject = BehaviorSubject<String>();
+
   Stream get cateIdStream => _cateIdSubject.stream;
+
   Sink get cateIdSink => _cateIdSubject.sink;
 
   final _indexSubject = BehaviorSubject<int>();
@@ -67,11 +69,11 @@ class HomeBloc extends BaseBloc {
     return "doingSomething";
   }
 
-  getUserProfile(){
+  getUserProfile() {
     _wineRepo.profileUser().then((onValue) => UserData.u = onValue);
   }
-  getStreamUserProfile(){
 
+  getStreamUserProfile() {
     return Stream<UserData>.fromFuture(_wineRepo.profileUser());
   }
 
@@ -104,8 +106,12 @@ class HomeBloc extends BaseBloc {
     return list;
   }
 
-  Stream<List<Wine>> getStreamWineList(cateId){
+  Stream<List<Wine>> getStreamWineList(cateId) {
     return Stream<List<Wine>>.fromFuture(_wineRepo.getWineByCateId(cateId));
+  }
+
+  getStreamWines() {
+    return Stream<List<Wine>>.fromFuture(_wineRepo.getWines());
   }
 
   List<Wine> getWineListByCateId(String cateId) {
@@ -123,8 +129,6 @@ class HomeBloc extends BaseBloc {
     return list;
   }
 
-
-
   @override
   void dispatchEvent(BaseEvent event) {
     switch (event.runtimeType) {
@@ -141,44 +145,41 @@ class HomeBloc extends BaseBloc {
   }
 
   final _orderSubject = BehaviorSubject<int>();
+
   Stream<int> get orderStream => _orderSubject.stream;
 
   Sink<int> get orderSink => _orderSubject.sink;
 
-  handleConfirmOrderEvent(event){
+  handleConfirmOrderEvent(event) {
     ConfirmOrderEvent e = event as ConfirmOrderEvent;
-    _orderRepo.confirmOrder().then((statusCode){
+    _orderRepo.confirmOrder().then((statusCode) {
       print(statusCode);
       orderSink.add(statusCode);
-      if(statusCode == 200){
-
-      }
-      if(statusCode == 406){
-
+    }, onError: (e) {
+      try{
+        orderSink.add(int.parse(e['status'].toString()));
+        print("confirmOrder: ${e['status']}");
+      }catch(e) {
+        print("confirmOrder: $e");
       }
     });
   }
 
-  handleMinusFormCartEvent(event){
+  handleMinusFormCartEvent(event) {
     MinusFromCart e = event as MinusFromCart;
     _orderRepo.minusFromCart(e.wineId).then((statusCode) {
       print(statusCode);
-    }, onError: (e) {
-
-    });
+    }, onError: (e) {});
   }
 
-  handleAddToCart(event){
+  handleAddToCart(event) {
     AddToCartEvent e = event as AddToCartEvent;
     _orderRepo.addToCart(e.wineId).then((statusCode) {
       print(statusCode);
-    }, onError: (e) {
-
-    });
+    }, onError: (e) {});
   }
 
-
-  getShoppingCartList(){
+  getShoppingCartList() {
     return Stream<List<ShoppingCart>>.fromFuture(
       _orderRepo.getShoppingCart(),
     );

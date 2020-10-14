@@ -62,15 +62,15 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     phoneController.text = UserData.u.phone;
     pointController.text = UserData.u.point;
     roleController.text = UserData.u.role;
-    Color colorRank;
+    String urlRank;
     if (double.parse(UserData.u.point) >= 1000) {
-      colorRank = Colors.cyanAccent;
+      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/Diamond.png';
     } else if (double.parse(UserData.u.point) >= 500) {
-      colorRank = Colors.yellow;
+      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/GOLD.png';
     } else if (double.parse(UserData.u.point) >= 250) {
-      colorRank = Colors.grey[300];
+      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/Silver.png';
     } else {
-      colorRank = Colors.brown[400];
+      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/BRONZE.png';
     }
 
     showMessage(status, color) {
@@ -109,10 +109,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               builder: (context, status, child) {
                 if (status == 200) {
                   showMessage("Thay đổi thành công!", Colors.green);
+                  bloc.changeStatusSink.add(0);
                 }
                 if (status == 404) {
                   showMessage("Gặp sự cố trong việc thay đổi. Mời bạn thử lại.",
                       Colors.red);
+                  bloc.changeStatusSink.add(0);
                 }
                 return Container(
                   padding: EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -151,7 +153,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                     Navigator.pushReplacementNamed(
                                         context, '/switch');
                                   },
-                            icon: Icon(Icons.swap_horiz),
+                                  icon: Icon(Icons.swap_horiz),
                                 )
                               : null,
                         ),
@@ -162,36 +164,44 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           child: Stack(
                             children: [
                               Container(
-                                width: 130,
-                                height: 130,
+                                width: 150,
+                                height: 150,
                                 decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 4,
-                                        color: Theme.of(context)
-                                            .scaffoldBackgroundColor),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          spreadRadius: 2,
-                                          blurRadius: 10,
-                                          color: Colors.black.withOpacity(0.1),
-                                          offset: Offset(0, 10))
-                                    ],
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                          UserData.u.avatar == null ||
-                                                  UserData.u.avatar == ""
-                                              ? "https://images.pexels.com/photos/3307758/pexels-photo-3307758.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250"
-                                              : "${UserData.u.avatar}",
-                                        ))),
+                                  border: Border.all(
+                                      width: 4,
+                                      color: Theme.of(context)
+                                          .scaffoldBackgroundColor),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        color: Colors.black.withOpacity(0.1),
+                                        offset: Offset(0, 10))
+                                  ],
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    // image: NetworkImage(
+                                    //   UserData.u.avatar == null ||
+                                    //           UserData.u.avatar == ""
+                                    //       ? "https://images.pexels.com/photos/3307758/pexels-photo-3307758.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=250"
+                                    //       : "${UserData.u.avatar}",
+                                    // ),
+                                    image: UserData.u.avatar == null ||
+                                            UserData.u.avatar == ""
+                                        ? AssetImage('assets/img/user.png')
+                                        : NetworkImage(
+                                            "${UserData.u.avatar}",
+                                          ),
+                                  ),
+                                ),
                               ),
                               Positioned(
                                   bottom: 0,
                                   right: 0,
                                   child: Container(
-                                    height: 40,
-                                    width: 40,
+                                    height: 60,
+                                    width: 60,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
@@ -199,11 +209,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                         color: Theme.of(context)
                                             .scaffoldBackgroundColor,
                                       ),
-                                      color: colorRank,
                                     ),
-                                    child: Icon(
-                                      Icons.credit_card,
-                                      color: Colors.white,
+                                    child: Image.network(
+                                      urlRank,
+                                      // fit: BoxFit.cover,
                                     ),
                                   )),
                             ],

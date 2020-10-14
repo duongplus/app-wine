@@ -16,10 +16,11 @@ import 'package:wine_app/shared/widget/xoayxoay.dart';
 
 import 'admin_wine_detail_page.dart';
 
-
 class WinePage extends StatefulWidget {
   AdminBloc bloc;
+
   WinePage({this.bloc});
+
   @override
   _WinePageState createState() => _WinePageState();
 }
@@ -32,27 +33,62 @@ class _WinePageState extends State<WinePage> {
         title: Text('Quản lý rượu'),
         elevation: 1,
         actions: <Widget>[
+          StreamProvider<List<Wine>>.value(
+            value: widget.bloc.getStreamWines(),
+            initialData: null,
+            child: Consumer<List<Wine>>(
+              builder: (context, wines, child) {
+                if (wines == null) {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    onPressed: null,
+                  );
+                }
+                return IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    showSearch(
+                        context: context,
+                        delegate: DataSearch(listWine: wines, bloc: widget.bloc));
+                  },
+                );
+              },
+            ),
+          ),
           IconButton(
-            icon: Icon(Icons.add, color: Colors.white,),
-            onPressed: (){
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AdminAddWineScreen(bloc: widget.bloc ),
+                    builder: (context) => AdminAddWineScreen(bloc: widget.bloc),
                   ));
             },
-          )
+          ),
         ],
       ),
       backgroundColor: Colors.white,
-      body: Body(bloc: widget.bloc,),
+      body: Body(
+        bloc: widget.bloc,
+      ),
     );
   }
 }
 
 class Body extends StatefulWidget {
   AdminBloc bloc;
+
   Body({this.bloc});
+
   @override
   _BodyState createState() => _BodyState();
 }
@@ -67,7 +103,7 @@ class _BodyState extends State<Body> {
         //   padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
         //   child: Text("Rượu Vang - Đẳng cấp và quý phái ", style: TextStyle(fontSize: 35)),
         // ),
-        Categories( widget.bloc),
+        Categories(widget.bloc),
         Wines(widget.bloc),
       ],
     );
@@ -77,6 +113,7 @@ class _BodyState extends State<Body> {
 class Wines extends StatefulWidget {
   String cateId;
   AdminBloc bloc;
+
   Wines(this.bloc);
 
   @override
@@ -86,14 +123,16 @@ class Wines extends StatefulWidget {
 class _WinesState extends State<Wines> {
   List<Cate> cates = List<Cate>();
   List<Wine> ws = List<Wine>();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // ws.clear();
   }
+
   @override
-  Future<void> didChangeDependencies()  {
+  Future<void> didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     // print("Home page didChangeDependencies");
@@ -124,7 +163,7 @@ class _WinesState extends State<Wines> {
               return Expanded(
                 child: Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+                      const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
                   child: GridView.builder(
                       itemCount: wines.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -148,7 +187,7 @@ class _WinesState extends State<Wines> {
                           }
 
 //                      ),
-                      )),
+                          )),
                 ),
               );
             },
@@ -160,8 +199,8 @@ class _WinesState extends State<Wines> {
 }
 
 class Categories extends StatefulWidget {
-
   AdminBloc bloc;
+
   Categories(this.bloc);
 
   @override
@@ -170,6 +209,7 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
   static int selectedIndex = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -318,12 +358,10 @@ class ItemCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "${FlutterMoneyFormatter(
-                        settings: MoneyFormatterSettings(
+                    "${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
                           symbol: 'vnđ',
                           fractionDigits: 0,
-                        ), amount: double.parse(wine.price.toString()))
-                        .output.symbolOnRight}",
+                        ), amount: double.parse(wine.price.toString())).output.symbolOnRight}",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -350,6 +388,115 @@ class ItemCard extends StatelessWidget {
 //          )
         ],
       ),
+    );
+  }
+}
+
+class DataSearch extends SearchDelegate<String> {
+  var wines = [];
+  var recentWines = [];
+  final List<Wine> listWine;
+  AdminBloc bloc;
+
+  DataSearch({this.listWine, this.bloc});
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [
+      IconButton(
+        icon: Icon(Icons.close),
+        color: Colors.grey,
+        iconSize: 30,
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+
+    wines.clear();
+    for (var wine in listWine) {
+      wines.add(wine.name);
+    }
+
+    recentWines.clear();
+    if (listWine.length > 1) {
+      recentWines.add(listWine[0].name);
+      recentWines.add(listWine[1].name);
+    }
+
+    final suggestionList = recentWines.isEmpty
+        ? recentWines
+        : listWine
+            .where((p) => p.name.toUpperCase().contains(query.toUpperCase()))
+            .toList();
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
+          Wine wine;
+          for (Wine w in listWine) {
+            if (w == suggestionList[index]) {
+              wine = w;
+            }
+          }
+          close(context, null);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminWineDetailsScreen(
+                  product: wine,
+                  bloc: bloc,
+                ),
+              ));
+        },
+        leading: Image.network(
+          suggestionList[index].thumbnail,
+          // 'assets/img/wine_glass.png',
+          height: 50,
+          width: 25,
+          fit: BoxFit.fitHeight,
+        ),
+        title: RichText(
+          text: TextSpan(
+            text: suggestionList[index].name.substring(0, query.length),
+            // text: query,
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            children: [
+              TextSpan(
+                text: suggestionList[index].name.substring(query.length),
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      itemCount: suggestionList.length,
     );
   }
 }

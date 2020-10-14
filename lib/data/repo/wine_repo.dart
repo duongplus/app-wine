@@ -30,9 +30,22 @@ class WineRepo {
     var c = Completer<List<Wine>>();
     try{
       var response = await _wineService.getWinesByCateId(cateId);
-      print(response.data);
       var wineList = Wine.parseWineList(response.data);
-      print(wineList.length);
+      c.complete(wineList);
+    } on DioError {
+
+    } catch (e) {
+      c.completeError(e);
+    }
+
+    return c.future;
+  }
+
+  Future<List<Wine>> getWines() async {
+    var c = Completer<List<Wine>>();
+    try{
+      var response = await _wineService.getWines();
+      var wineList = Wine.parseWineList(response.data);
       c.complete(wineList);
     } on DioError {
 

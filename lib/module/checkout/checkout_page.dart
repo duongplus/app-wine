@@ -186,10 +186,28 @@ class _ProductListWidgetState extends State<ProductListWidget> {
               HomeContainerPage.pagecontroller.jumpToPage(0);
               bloc.orderSink.add(0);
             }
-            if (status == 406) {
+            else if(status == 205){
+              showMessage("Lỗi thanh toán. Mời bạn thử lại", Colors.brown[600]);
+              HomeContainerPage.pagecontroller.jumpToPage(0);
+              bloc.orderSink.add(0);
+            }
+            else if (status == 404) {
+              bloc.indexSink.add(1);
+              showMessage("Mời bạn thử lại", Colors.brown[600]);
+              HomeContainerPage.pagecontroller.jumpToPage(0);
+              bloc.orderSink.add(0);
+            }
+            else if (status == 406) {
               bloc.indexSink.add(1);
               showMessage("Gặp sự cố về dữ liệu! Mời bạn thử lại", Colors.red);
               HomeContainerPage.pagecontroller.jumpToPage(1);
+              bloc.orderSink.add(0);
+            }
+            else if(status == 417){
+              showMessage("Gặp sự cố về dữ liệu! Mời bạn thử lại", Colors.red);
+              setState(() {
+                HomeContainerPage.pagecontroller.jumpToPage(1);
+              });
               bloc.orderSink.add(0);
             }
             return StreamProvider.value(
@@ -321,11 +339,14 @@ class _ProductListWidgetState extends State<ProductListWidget> {
               onPressed: () {
                 bloc.event.add(MinusFromCart(wineId: product.id["\$oid"]));
                 bloc.shoppingCartSink.add(total - 1);
+                // HomeContainerPage.pagecontroller.jumpToPage(0);
                 setState(() {
-                  productList[index].amount -= 1;
-                  if (productList[index].amount == 0) {
-                    productList.removeAt(index);
-                  }
+                  HomeContainerPage.pagecontroller.jumpToPage(0);
+                  HomeContainerPage.pagecontroller.jumpToPage(1);
+                  // productList[index].amount -= 1;
+                  // if (productList[index].amount == 0) {
+                  //   productList.removeAt(index);
+                  // }
                 });
               },
             ),
@@ -352,11 +373,15 @@ class _ProductListWidgetState extends State<ProductListWidget> {
               onPressed: () {
                 bloc.event.add(AddToCartEvent(wineId: product.id["\$oid"]));
                 bloc.shoppingCartSink.add(total + 1);
+                // HomeContainerPage.pagecontroller.jumpToPage(0);
+                // HomeContainerPage.pagecontroller.jumpToPage(1);
                 setState(() {
-                  productList[index].amount += 1;
-                  if (productList[index].amount == product.capacity) {
-                    productList[index].amount = product.capacity;
-                  }
+                  HomeContainerPage.pagecontroller.jumpToPage(0);
+                  HomeContainerPage.pagecontroller.jumpToPage(1);
+                  // productList[index].amount += 1;
+                  // if (productList[index].amount == product.capacity) {
+                  //   productList[index].amount = product.capacity;
+                  // }
                 });
               },
             ),

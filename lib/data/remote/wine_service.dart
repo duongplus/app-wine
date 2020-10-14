@@ -9,6 +9,12 @@ class WineService{
     );
   }
 
+  Future<Response> getWines() {
+    return WineClient.instance.dio.get(
+      '/api/wine/all-wine',
+    );
+  }
+
   Future<Response> getWinesByCateId(String cateId) {
     return WineClient.instance.dio.get(
       '/api/wine/cate/$cateId',

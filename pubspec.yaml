@@ -24,7 +24,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   provider: 3.1.0
-  dio: 2.1.16
+#  dio: 2.1.16
+  dio: 3.0.10
   rxdart: ^0.22.2
   flutter_spinkit: ^4.0.0
   badges: 1.1.0
@@ -59,6 +60,7 @@ flutter:
     - assets/img/user.png
     - assets/img/wine_lap.png
     - assets/img/success.gif
+    - assets/img/wine_glass.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

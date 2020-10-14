@@ -26,14 +26,17 @@ class _ColorLoaderState extends State<ColorLoader> with TickerProviderStateMixin
   void initState() {
     super.initState();
 
+    // controller1 = AnimationController(
+    //     duration: const Duration(milliseconds: 1200), vsync: this);
+
     controller1 = AnimationController(
-        duration: const Duration(milliseconds: 1200), vsync: this);
+        duration: const Duration(milliseconds: 1200));
 
     controller2 = AnimationController(
-        duration: const Duration(milliseconds: 900), vsync: this);
+        duration: const Duration(milliseconds: 900));
 
     controller3 = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 2000));
 
     animation1 = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: controller1,

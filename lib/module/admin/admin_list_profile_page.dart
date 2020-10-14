@@ -66,7 +66,7 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DetailUserWidget(userData: user)));
+                  builder: (context) => DetailUserWidget(userData: user, bloc: widget.bloc)));
         },
         title: Text(
           '${user.phone}',

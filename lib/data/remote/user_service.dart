@@ -52,4 +52,13 @@ class UserService {
       '/api/user/all-user',
     );
   }
+
+  Future<Response> passwordRecovery(String phone) {
+    return WineClient.instance.dio.post(
+      '/api/user/password-recovery',
+      data: {
+        'phone': phone
+      }
+    );
+  }
 }

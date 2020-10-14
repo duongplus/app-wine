@@ -36,7 +36,7 @@ class Wine{
       cateId: json["cateID"],
       capacity: json["capacity"],
       size: json["size"],
-      color: _color
+      color: Colors.pink[300]
     );
   }
 
@@ -44,4 +44,6 @@ class Wine{
     var list = map['data'] as List;
     return list.map((product) => Wine.fromJson(product)).toList();
   }
+
+  static List<Wine> wines;
 }

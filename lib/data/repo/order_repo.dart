@@ -72,10 +72,13 @@ class OrderRepo {
     try {
       var response = await _orderService.confirmOrder();
       var status = response.data['status'];
+      print(response.data);
       c.complete(status);
-    } on DioError {
-//      c.completeError(RestError.fromData('Lỗi lấy thông tin shopping cart'));
+    } on DioError{
+      var map = {'status':'404'};
+     c.completeError(map);
     } catch (e) {
+      print(e);
       c.completeError(e);
     }
     return c.future;

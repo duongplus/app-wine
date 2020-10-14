@@ -101,4 +101,20 @@ class UserRepo {
     }
     return c.future;
   }
+
+  Future<int> passwordRecovery(String phone) async {
+    Completer c = Completer<int>();
+    try {
+      var response = await _userService.passwordRecovery(phone);
+      var status = response.data['status'];
+      c.complete(status);
+    } on DioError catch (e) {
+      //TODO: Loi network
+      c.completeError(e.response.data['status']);
+    } catch (e) {
+      //TODO:
+      c.completeError(e);
+    }
+    return c.future;
+  }
 }
