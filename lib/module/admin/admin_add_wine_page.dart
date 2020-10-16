@@ -145,7 +145,7 @@ class _BodyState extends State<Body> {
                 buildTextField("Thể tích", "xxx ml", false, sizeController,
                     TextInputType.number),
                 buildTextField("Số lượng", "xx", false, capacityController,
-                    TextInputType.multiline),
+                    TextInputType.number),
                 // buildTextField(
                 //     "Mã số loại", "1", false, cateIDController),
                 Row(

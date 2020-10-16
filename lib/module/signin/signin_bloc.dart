@@ -86,20 +86,20 @@ class SignInBloc extends BaseBloc {
     }
   }
 
-  handleSignIn(event) {
+  handleSignIn(event) async {
     btnSink.add(false);
     loadingSink.add(true);
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 1), () async {
       SignInEvent e = event as SignInEvent;
-      _userRepo.signIn(e.phone, e.pass).then(
+      await _userRepo.signIn(e.phone, e.pass).then(
             (userData) {
               UserData.u = userData;
           teddySink.add('success');
           processEventSink.add(SignInSuccessEvent(userData));
         },
         onError: (e) {
-          print(e['status']);
+          // print(e['status']);
           btnSink.add(true);
           loadingSink.add(false);
           teddySink.add('fail');

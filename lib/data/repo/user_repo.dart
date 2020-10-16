@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:wine_app/data/remote/user_service.dart';
 import 'package:wine_app/data/spref/spref.dart';
 import 'package:wine_app/shared/constant.dart';
+import 'package:wine_app/shared/model/revenue.dart';
+import 'package:wine_app/shared/model/shopping_cart.dart';
 import 'package:wine_app/shared/model/user_data.dart';
 
 class UserRepo {
@@ -114,6 +116,25 @@ class UserRepo {
     } catch (e) {
       //TODO:
       c.completeError(e);
+    }
+    return c.future;
+  }
+
+  Future<List<Revenue>> historyOrderConfirm() async {
+    Completer c = Completer<List<Revenue>>();
+    try {
+      var response = await _userService.historyOrderConfirm();
+
+      var rev = Revenue.parseUserHistory(response.data);
+      c.complete(rev);
+    } on DioError catch (e) {
+      //TODO: Loi network
+      // c.completeError(e.response.data['status']);
+      print(e);
+    } catch (e) {
+      //TODO:
+      // c.completeError(e);
+      print(e);
     }
     return c.future;
   }

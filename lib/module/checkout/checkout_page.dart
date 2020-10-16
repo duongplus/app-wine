@@ -27,10 +27,8 @@ class CheckOutPage extends StatefulWidget {
 class _CheckOutPageState extends State<CheckOutPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<HomeBloc>(
-          builder: (context, bloc, child) => ProductListWidget(bloc)),
-    );
+    return Consumer<HomeBloc>(
+          builder: (context, bloc, child) => ProductListWidget(bloc));
   }
 }
 
@@ -61,74 +59,74 @@ class _ConfirmInfoWidgetState extends State<ConfirmInfoWidget> {
     }
     return Consumer<HomeBloc>(builder: (context, bloc, child) {
       return Container(
-        height: 170,
-        width: double.infinity,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Tổng tiền: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-                    symbol: 'vnđ',
-                    fractionDigits: 0,
-                  ), amount: widget.total).output.symbolOnRight}',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.cyan),
-            ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              'Giảm giá: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-                    symbol: '%',
-                    fractionDigits: 0,
-                  ), amount: persent).output.symbolOnRight}',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.cyan),
-            ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              'Thành tiền: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-                    symbol: 'vnđ',
-                    fractionDigits: 0,
-                  ), amount: (widget.total - (widget.total * (persent / 100)))).output.symbolOnRight}',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.cyan),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            RaisedButton(
-              onPressed: () {
-                bloc.event.add(ConfirmOrderEvent());
-              },
-              color: Colors.cyan,
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Text(
-                "Thanh toán".toUpperCase(),
+          height: 170,
+          width: double.infinity,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Tổng tiền: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+                      symbol: 'vnđ',
+                      fractionDigits: 0,
+                    ), amount: widget.total).output.symbolOnRight}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: 14, letterSpacing: 2.2, color: Colors.white),
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.cyan),
               ),
-            ),
-          ],
-        ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Text(
+                'Giảm giá: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+                      symbol: '%',
+                      fractionDigits: 0,
+                    ), amount: persent).output.symbolOnRight}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.cyan),
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Text(
+                'Thành tiền: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
+                      symbol: 'vnđ',
+                      fractionDigits: 0,
+                    ), amount: (widget.total - (widget.total * (persent / 100)))).output.symbolOnRight}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.cyan),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              RaisedButton(
+                onPressed: () {
+                  bloc.event.add(ConfirmOrderEvent());
+                },
+                color: Colors.cyan,
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                child: Text(
+                  "Thanh toán".toUpperCase(),
+                  style: TextStyle(
+                      fontSize: 14, letterSpacing: 2.2, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
       );
     });
   }

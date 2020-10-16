@@ -93,33 +93,47 @@ class _AdminRevenueWidgetState extends State<AdminRevenueWidget> {
             double netTotal = 0;
             double total = 0;
             double discount = 0;
-            for(var i in list){
+            for (var i in list) {
               netTotal += i.netTotal;
               total += i.total;
-              discount +=i.discount;
+              discount += i.discount;
             }
             return ListView(
               children: <Widget>[
                 Text('Tổng lợi nhuận: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-                  symbol: 'vnđ',
-                  fractionDigits: 0,
-                ), amount: double.parse(total.toString())).output.symbolOnRight}'),
-
+                      symbol: 'vnđ',
+                      fractionDigits: 0,
+                    ), amount: double.parse(total.toString())).output.symbolOnRight}'),
                 Text('Tổng giảm giá: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-                  symbol: 'vnđ',
-                  fractionDigits: 0,
-                ), amount: double.parse(discount.toString())).output.symbolOnRight}'),
-
+                      symbol: 'vnđ',
+                      fractionDigits: 0,
+                    ), amount: double.parse(discount.toString())).output.symbolOnRight}'),
                 Text('Tổng lợi nhuận thực: ${FlutterMoneyFormatter(settings: MoneyFormatterSettings(
-                  symbol: 'vnđ',
-                  fractionDigits: 0,
-                ), amount: double.parse(netTotal.toString())).output.symbolOnRight}'),
+                      symbol: 'vnđ',
+                      fractionDigits: 0,
+                    ), amount: double.parse(netTotal.toString())).output.symbolOnRight}'),
+                Container(
+                  height: 1,
+                  color: Colors.grey,
+                ),
+                Center(
+                  child: Text('Danh sách đơn hàng (${list.length})'),
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.grey,
+                ),
                 Container(
                   height: size.height,
-                  child: ListView.builder(
-                      reverse: true,
+                  child: ListView.separated(
+                      separatorBuilder: (context, index) => Container(
+                            height: 1,
+                            color: Colors.grey,
+                          ),
+                      // reverse: true,
                       itemCount: list.length,
-                      itemBuilder: (context, index) => _buildItemList(list[index])),
+                      itemBuilder: (context, index) =>
+                          _buildItemList(list[index])),
                 ),
               ],
             );
@@ -135,7 +149,9 @@ class _AdminRevenueWidgetState extends State<AdminRevenueWidget> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailRevenuePage(revenue: revenue,),
+              builder: (context) => DetailRevenuePage(
+                revenue: revenue,
+              ),
             ));
       },
       title: Text(

@@ -7,6 +7,7 @@ import 'package:wine_app/base/base_event.dart';
 import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/profile/profile_change_name_event.dart';
 import 'package:wine_app/event/profile/profile_change_pass_event.dart';
+import 'package:wine_app/shared/model/revenue.dart';
 import 'package:wine_app/shared/validation.dart';
 
 class ProfileBloc extends BaseBloc {
@@ -130,6 +131,10 @@ class ProfileBloc extends BaseBloc {
         btnPassSink.add(enable);
       },
     );
+  }
+
+  Stream<List<Revenue>> getStreamHistories() {
+    return Stream<List<Revenue>>.fromFuture(_userRepo.historyOrderConfirm());
   }
 
   void handleChangeNameEvent(BaseEvent event) {

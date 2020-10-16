@@ -4,6 +4,7 @@ import 'package:wine_app/shared/constant.dart';
 
 class WineClient {
   static BaseOptions _options = new BaseOptions(
+    // baseUrl: "http://localhost:8000",
     baseUrl: "http://192.168.56.1:8000",
     connectTimeout: 5000,
     receiveTimeout: 3000,
@@ -18,7 +19,7 @@ class WineClient {
       if (token != null) {
         myOption.headers["Authorization"] = "Bearer " + token;
       }
-
+      token;
       return myOption;
     }));
   }

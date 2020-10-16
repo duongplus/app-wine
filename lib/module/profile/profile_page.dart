@@ -8,6 +8,7 @@ import 'package:wine_app/event/profile/profile_change_name_event.dart';
 import 'package:wine_app/event/profile/profile_change_pass_event.dart';
 import 'package:wine_app/module/home/main_container_page.dart';
 import 'package:wine_app/module/profile/change_pass_page.dart';
+import 'package:wine_app/module/profile/history_page.dart';
 import 'package:wine_app/module/profile/profile_bloc.dart';
 import 'package:wine_app/shared/constant.dart';
 import 'package:wine_app/shared/model/user_data.dart';
@@ -64,13 +65,17 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     roleController.text = UserData.u.role;
     String urlRank;
     if (double.parse(UserData.u.point) >= 1000) {
-      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/Diamond.png';
+      urlRank =
+          'https://raw.githubusercontent.com/duongplus/wine-images/master/Diamond.png';
     } else if (double.parse(UserData.u.point) >= 500) {
-      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/GOLD.png';
+      urlRank =
+          'https://raw.githubusercontent.com/duongplus/wine-images/master/GOLD.png';
     } else if (double.parse(UserData.u.point) >= 250) {
-      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/Silver.png';
+      urlRank =
+          'https://raw.githubusercontent.com/duongplus/wine-images/master/Silver.png';
     } else {
-      urlRank = 'https://raw.githubusercontent.com/duongplus/wine-images/master/BRONZE.png';
+      urlRank =
+          'https://raw.githubusercontent.com/duongplus/wine-images/master/BRONZE.png';
     }
 
     showMessage(status, color) {
@@ -267,15 +272,32 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             true,
                             false,
                             bloc),
-                        buildTextField(
-                            "Điểm hội viên",
-                            "${UserData.u.point}",
-                            pointController,
-                            (point) {},
-                            null,
-                            true,
-                            false,
-                            bloc),
+                        Stack(
+                          children: [
+                            buildTextField(
+                                "Điểm hội viên",
+                                "${UserData.u.point}",
+                                pointController,
+                                (point) {},
+                                null,
+                                true,
+                                false,
+                                bloc),
+                            Positioned(
+                                right: 0,
+                                child: IconButton(
+                                  icon: Icon(Icons.event),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HistoryPage(
+                                                  bloc: bloc,
+                                                )));
+                                  },
+                                ))
+                          ],
+                        ),
                         buildTextField("Vị trí", "${UserData.u.role}",
                             roleController, (role) {}, null, true, false, bloc),
                         SizedBox(

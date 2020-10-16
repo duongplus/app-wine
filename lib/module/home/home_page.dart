@@ -229,7 +229,7 @@ class _CategoriesState extends State<Categories> {
             child: Consumer<Object>(builder: (context, data, child) {
               if (data == null) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: ColorLoader(),
                 );
               }
               var cates = data as List<Cate>;

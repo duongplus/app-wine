@@ -5,8 +5,9 @@ import 'package:wine_app/network/wine_client.dart';
 import 'package:wine_app/shared/model/user_data.dart';
 
 class UserService {
-  Future<Response> signIn(String phone, String pass) {
-    return WineClient.instance.dio.post(
+  // Choor nafy
+  Future<Response> signIn(String phone, String pass) async {
+    return await WineClient.instance.dio.post(
       '/api/user/sign-in',
       data: {
         'phone': phone,
@@ -50,6 +51,12 @@ class UserService {
   Future<Response> findAllUser() {
     return WineClient.instance.dio.get(
       '/api/user/all-user',
+    );
+  }
+
+  Future<Response> historyOrderConfirm() {
+    return WineClient.instance.dio.get(
+      '/api/user/history',
     );
   }
 
