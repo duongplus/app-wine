@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:wine_app/data/spref/spref.dart';
@@ -57,7 +58,7 @@ class _SplashPageState extends State<SplashPage> {
   _startApp() {
     Future.delayed(
       Duration(seconds: 3),
-      () async {
+          () async {
         var token = await SPref.instance.get(SPrefCache.KEY_TOKEN);
         if (token != null) {
           if(parseJwt(token)['role'] == "ADMIN"){
@@ -70,6 +71,27 @@ class _SplashPageState extends State<SplashPage> {
         Navigator.pushReplacementNamed(context, '/sign-in');
       },
     );
+    // try{
+    //   if(Platform.isAndroid || Platform.isIOS){
+    //     Future.delayed(
+    //       Duration(seconds: 3),
+    //           () async {
+    //         var token = await SPref.instance.get(SPrefCache.KEY_TOKEN);
+    //         if (token != null) {
+    //           if(parseJwt(token)['role'] == "ADMIN"){
+    //             Navigator.pushReplacementNamed(context, '/switch');
+    //             return;
+    //           }
+    //           Navigator.pushReplacementNamed(context, '/home');
+    //           return;
+    //         }
+    //         Navigator.pushReplacementNamed(context, '/sign-in');
+    //       },
+    //     );
+    //   }
+    // }catch(e) {
+    //   Navigator.pushReplacementNamed(context, '/sign-in');
+    // }
   }
 
   @override

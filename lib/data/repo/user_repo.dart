@@ -26,9 +26,11 @@ class UserRepo {
     } on DioError catch (e) {
       //TODO: Loi network
       c.completeError(e.response.data);
+      print(e);
     } catch (e) {
       //TODO:
       c.completeError(e);
+      print(e);
     }
     return c.future;
   }
@@ -45,11 +47,11 @@ class UserRepo {
         c.complete(userData);
       }
     } on DioError catch (e) {
-      //TODO: Loi network
       c.completeError(e.response.data);
+      print(e);
     } catch (e) {
-      //TODO:
       c.completeError(e);
+      print(e);
     }
     return c.future;
   }

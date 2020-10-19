@@ -61,6 +61,10 @@ flutter:
     - assets/img/wine_lap.png
     - assets/img/success.gif
     - assets/img/wine_glass.png
+    - assets/img/search_money.png
+    - assets/img/wine_success.gif
+    - assets/img/warning.gif
+    - assets/img/close.gif
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

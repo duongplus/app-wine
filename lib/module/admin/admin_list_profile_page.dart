@@ -37,7 +37,10 @@ class _ListProfileWidgetState extends State<ListProfileWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Danh sách người dùng'),
+        iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        backgroundColor: Colors.white,
+        title: Text('Danh sách người dùng'.toUpperCase(), style: TextStyle(color: Colors.pink[300],),),
       ),
       body: StreamProvider<List<UserData>>.value(
         value: widget.bloc.getListUserData(),

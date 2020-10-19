@@ -15,7 +15,10 @@ class DetailRevenuePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chi tiết hóa đơn'),
+        iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        backgroundColor: Colors.white,
+        title: Text('Chi tiết hóa đơn'.toUpperCase(), style: TextStyle(color:Colors.pink[300],),),
       ),
       body: DetailRevenueWidget(
         revenue: revenue,

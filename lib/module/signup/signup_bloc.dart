@@ -120,11 +120,13 @@ class SignUpBloc extends BaseBloc {
           teddySink.add('fail');
           loadingSink.add(false);
           btnSink.add(true);
-          if(e['status'].toString() == '409'){
-            processEventSink.add(SignUpFailEvent('Số điện thoại này đã tồn tại.'));
-          } else{
-            processEventSink.add(SignUpFailEvent(e.toString()));
-          }
+          try{
+            if(e['status'].toString() == '409'){
+              processEventSink.add(SignUpFailEvent('Số điện thoại này đã tồn tại.'));
+            } else{
+              processEventSink.add(SignUpFailEvent(e.toString()));
+            }
+          } catch(e){}
         },
       );
     });

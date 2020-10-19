@@ -43,6 +43,7 @@ class InfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Thông tin điểm hội viên'.toUpperCase()),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: IntroductionScreen(

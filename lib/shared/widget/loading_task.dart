@@ -29,13 +29,20 @@ class LoadingTask extends StatelessWidget {
                       width: 120,
                       height: 120,
                       decoration: new BoxDecoration(
-                        color: Colors.black54,
+                        color: Colors.yellow[100],
                         borderRadius: BorderRadius.all(
                           Radius.circular(8),
                         ),
                       ),
                       child: Center(
-                        child: ColorLoader(),
+                        child: Image(
+                          image: AssetImage(
+                            'assets/img/wine_success.gif'
+                          ),
+                          fit: BoxFit.fill,
+                          height: 100,
+                          width: 100,
+                        ),
                       ),
                     )
                   : Container(),

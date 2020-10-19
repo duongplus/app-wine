@@ -24,10 +24,15 @@ class MyApp extends StatelessWidget {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-//        theme: ThemeData(
-//          primarySwatch: Colors.white,
-//        ),
+      //  theme: ThemeData(
+      //    primarySwatch: Colors.pink,
+      //    accentColor: Colors.pink,
+      //    accentIconTheme: IconThemeData(color: Colors.pink),
+      //    buttonColor: Colors.pink,
+      //    iconTheme: IconThemeData(color: Colors.pink),
+      //  ),
         title: "wine app",
+        // home: SignInPage(),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
           '/': (context) => SplashPage(),

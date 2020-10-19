@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:wine_app/shared/app_color.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +16,13 @@ class PageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+         iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        
+        backgroundColor: Colors.white,
         title: Text(
           title,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.pink[300]),
         ),
         actions: actions,
       ),

@@ -28,7 +28,10 @@ class AdminWineDetailsScreen extends StatelessWidget {
       // each product have a color
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: product.color,
+        iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        backgroundColor: Colors.white,
+        title: Text('Chi tiết rượu'.toUpperCase(), style: TextStyle(color: Colors.pink[300],),),
       ),
       body: Body(
         product: product,
@@ -97,7 +100,7 @@ class Body extends StatelessWidget {
                 FlatButton(
                   shape:
                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  color: product.color,
+                  color: Colors.pink[300],
                   onPressed: () {
                     Wine wine = Wine(
                       id: product.id,

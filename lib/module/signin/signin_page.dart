@@ -7,6 +7,7 @@ import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/event/signin/signin_event.dart';
 import 'package:wine_app/event/signin/signin_fail_event.dart';
 import 'package:wine_app/event/signin/signin_sucess_event.dart';
+import 'package:wine_app/module/admin/switch_page.dart';
 import 'package:wine_app/module/home/main_container_page.dart';
 import 'package:wine_app/module/signin/signin_bloc.dart';
 import 'package:wine_app/shared/app_color.dart';
@@ -241,12 +242,21 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
   }
 
   handleEvent(BaseEvent event) {
+
     if (event is SignInSuccessEvent) {
       if(event.userData.role == "ADMIN"){
         Navigator.pushReplacementNamed(context, '/switch');
+        // Navigator.pushReplacement(context, MaterialPageRoute(
+        //   builder: (context) =>
+        //      SwitchPage(),
+        // ));
         return;
       }
       Navigator.pushReplacementNamed(context, '/home');
+      // Navigator.pushReplacement(context, MaterialPageRoute(
+      //   builder: (context) =>
+      //       HomeContainerPage(),
+      // ));
       return;
     }
 

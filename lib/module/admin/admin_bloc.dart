@@ -8,6 +8,7 @@ import 'package:wine_app/data/repo/order_repo.dart';
 import 'package:wine_app/data/repo/user_repo.dart';
 import 'package:wine_app/data/repo/wine_repo.dart';
 import 'package:wine_app/event/admin/admin_add_wine.dart';
+import 'package:wine_app/event/admin/admin_delete_wine.dart';
 import 'package:wine_app/event/admin/admin_get_revenue.dart';
 import 'package:wine_app/event/admin/admin_password_recovery.dart';
 import 'package:wine_app/event/admin/admin_update_wine.dart';
@@ -87,6 +88,9 @@ class AdminBloc extends BaseBloc {
       case AdminAddWine:
         handleAdminAddWine(event);
         break;
+      case AdminDeleteWine:
+        handleAdminDeleteWine(event);
+        break;
       case AdminGetRevenue:
         handleAdminGetRevenue(event);
         break;
@@ -94,6 +98,13 @@ class AdminBloc extends BaseBloc {
         handleAdminPasswordRecovery(event);
         break;
     }
+  }
+
+  handleAdminDeleteWine(event){
+    AdminDeleteWine e = event as AdminDeleteWine;
+    _wineRepo.deleteWine(e.oid).then((status) {
+      statusSink.add(status);
+    }, onError: (e) {});
   }
 
   handleAdminPasswordRecovery(event){

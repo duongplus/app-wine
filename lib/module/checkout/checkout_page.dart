@@ -112,7 +112,30 @@ class _ConfirmInfoWidgetState extends State<ConfirmInfoWidget> {
               ),
               RaisedButton(
                 onPressed: () {
-                  bloc.event.add(ConfirmOrderEvent());
+                  showDialog(
+                      context: context,
+                      builder: (_) => new AlertDialog(
+                        title: new Text("Thông báo"),
+                        content: new Text(
+                            "Bạn muốn hực hiện thanh toán?"),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Không'),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Có'),
+                            onPressed: () {
+                              bloc.event.add(ConfirmOrderEvent());
+                              Navigator.of(context)
+                                  .pop();
+                            },
+                          ),
+                        ],
+                      ));
                 },
                 color: Colors.cyan,
                 padding: EdgeInsets.symmetric(horizontal: 50),

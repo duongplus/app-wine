@@ -36,7 +36,7 @@ class Wine{
       cateId: json["cateID"],
       capacity: json["capacity"],
       size: json["size"],
-      color: Colors.pink[300]
+      color: Colors.pink[200]
     );
   }
 

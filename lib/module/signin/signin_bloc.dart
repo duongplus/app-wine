@@ -103,15 +103,17 @@ class SignInBloc extends BaseBloc {
           btnSink.add(true);
           loadingSink.add(false);
           teddySink.add('fail');
-          if(e['status'].toString() == '404'){
-            processEventSink
-                .add(SignInFailEvent('Số điện thoại này không tồn tại'));
-          } else if(e['status'].toString() == '401'){
-            processEventSink
-                .add(SignInFailEvent('Sai mật khẩu.'));
-          } else {
-            processEventSink.add(SignInFailEvent(e.toString()));
-          }
+          try{
+            if(e['status'].toString() == '404'){
+              processEventSink
+                  .add(SignInFailEvent('Số điện thoại này không tồn tại'));
+            } else if(e['status'].toString() == '401'){
+              processEventSink
+                  .add(SignInFailEvent('Sai mật khẩu.'));
+            } else {
+              processEventSink.add(SignInFailEvent(e.toString()));
+            }
+          }catch(e){}
         },
       );
     });

@@ -56,7 +56,12 @@ class _DetailUserWidgetState extends State<DetailUserWidget> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        backgroundColor: Colors.white,
+        title: Text('Thông tin người dùng'.toUpperCase(), style: TextStyle(color: Colors.pink[300],),),
+      ),
       body: Container(
         padding: EdgeInsets.only(left: 16, top: 25, right: 16),
         child: StreamProvider<int>.value(
@@ -77,14 +82,14 @@ class _DetailUserWidgetState extends State<DetailUserWidget> {
                 },
                 child: ListView(
                   children: [
-                    Text(
-                      "Thông tin người dùng",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
+                    // Text(
+                    //   "Thông tin người dùng",
+                    //   style:
+                    //       TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                    // ),
+                    // SizedBox(
+                    //   height: 15,
+                    // ),
                     Center(
                       child: Stack(
                         children: [

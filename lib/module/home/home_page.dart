@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:random_color/random_color.dart';
 import 'package:wine_app/module/detail/detail_page.dart';
@@ -50,7 +51,27 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-            )
+            ),
+            StreamProvider<List<Wine>>.value(
+              value: bloc.getStreamWines(),
+              initialData: null,
+              child: Consumer<List<Wine>>(
+                builder:(context, wines, child) {
+                  if(wines == null){
+                    return IconButton(
+                      icon: Image.asset('assets/img/search_money.png', width: 20, height: 20),
+                    );
+                  }
+
+                  return IconButton(
+                    icon: Image.asset('assets/img/search_money.png', width: 20, height: 20,color: Colors.pink[300],),
+                    onPressed: () {
+                      showSearch(context: context, delegate: DataSearchByMoney(listWine: wines,));
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
         backgroundColor: Colors.white,
@@ -140,13 +161,17 @@ class _WinesState extends State<Wines> {
         child: Consumer<String>(
           builder: (context, cid, child) =>
               StreamProvider.value(
-                initialData: ws,
+                initialData: null,
                 value: bloc.getStreamWineList(cid),
                 child: Consumer<List<Wine>>(
                   builder: (context, wines, child) {
                     if (wines == null) {
                       return Center(
-                        child: ColorLoader(),
+                        child: Image(
+                          image: AssetImage('assets/img/wine_success.gif'),
+                          height: 80,
+                          width: 80,
+                        ),
                       );
                     }
                     return Expanded(
@@ -229,8 +254,12 @@ class _CategoriesState extends State<Categories> {
             child: Consumer<Object>(builder: (context, data, child) {
               if (data == null) {
                 return Center(
-                  child: ColorLoader(),
-                );
+                        child: Image(
+                          image: AssetImage('assets/img/wine_success.gif'),
+                          height: 80,
+                          width: 80,
+                        ),
+                      );
               }
               var cates = data as List<Cate>;
               return Padding(
@@ -414,7 +443,11 @@ class DataSearch extends SearchDelegate<String> {
   var recentWines = [];
   final List<Wine> listWine;
 
-  DataSearch({this.listWine});
+  DataSearch({this.listWine}): super(
+    searchFieldLabel: 'Rượu vang...',
+    keyboardType: TextInputType.text,
+    textInputAction: TextInputAction.search,
+  );
   @override
   List<Widget> buildActions(BuildContext context) {
     // TODO: implement buildActions
@@ -514,5 +547,144 @@ class DataSearch extends SearchDelegate<String> {
           ),
       itemCount: suggestionList.length,
     );
+  }
+}
+
+class DataSearchByMoney extends SearchDelegate<String> {
+  var wines = [];
+  var recentWines = [];
+  final List<Wine> listWine;
+  DataSearchByMoney({this.listWine}): super(
+    searchFieldLabel: '> Giá',
+    keyboardType: TextInputType.number,
+    textInputAction: TextInputAction.search,
+  );
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [
+      IconButton(
+        icon: Icon(Icons.close),
+        color: Colors.grey,
+        iconSize: 30,
+        onPressed: () {
+          query = '0';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    wines.clear();
+    for(var wine in listWine){
+      wines.add(wine.name);
+    }
+
+    recentWines.clear();
+    if(listWine.length>1){
+      recentWines.add(listWine[0]);
+      recentWines.add(listWine[1]);
+    }
+    var suggestionList;
+    if(query.isEmpty){
+      suggestionList = query.isEmpty
+          ? recentWines
+          : listWine.where((p) => p.name.toUpperCase().contains(query.toUpperCase())).toList();
+    }else {
+      try {
+        suggestionList = query.isEmpty
+            ? recentWines
+            : listWine.where((p) => double.parse(query) <= double.parse(p.price.toString())).toList();
+      }catch (e){
+        showMessage('Bạn vui lòng chỉ nhập số', Colors.brown[600]);
+        suggestionList = [];
+      }
+
+    }
+    // for(var q in listWine){
+    //   if(query.isNotEmpty){
+    //     if(double.parse(query) >= double.parse(q.price.toString())){
+    //       suggestionList.add(q);
+    //     }
+    //   }
+    // }
+    return ListView.builder(
+      itemBuilder: (context, index) =>
+          ListTile(
+            onTap: () {
+              Wine wine;
+              for(Wine w in listWine){
+                if(w == suggestionList[index]){
+                  wine = w;
+                }
+              }
+              close(context, null);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DetailsScreen(
+                          product: wine,
+                        ),
+                  ));
+            },
+            leading: Image.network(
+              suggestionList[index].thumbnail,
+              // 'assets/img/wine_glass.png',
+              height: 50,
+              width: 25,
+              fit: BoxFit.fitHeight,
+            ),
+            title: RichText(
+              text: TextSpan(
+                text: suggestionList[index].name.substring(0, query.length),
+                // text: query,
+                style: TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                    text: suggestionList[index].name.substring(query.length),
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+      itemCount: suggestionList.length,
+    );
+  }
+
+  showMessage(status, color) {
+    Fluttertoast.showToast(
+        msg: status.toString(),
+        timeInSecForIosWeb: 10,
+        webShowClose: true,
+        toastLength: Toast.LENGTH_LONG,
+        textColor: Colors.white,
+        backgroundColor: color,
+        gravity: ToastGravity.BOTTOM);
   }
 }

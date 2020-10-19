@@ -53,6 +53,7 @@ class _ChangePassWidgetState extends State<ChangePassWidget> {
       child: Consumer<ProfileBloc>(
         builder: (context, bloc, child) => Scaffold(
           appBar: AppBar(
+            title: Text('Đổi mật khẩu'.toUpperCase()),
             backgroundColor: Colors.lightGreenAccent,
           ),
           body: StreamProvider<int>.value(

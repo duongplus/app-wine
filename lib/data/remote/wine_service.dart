@@ -62,4 +62,10 @@ class WineService{
         }
     );
   }
+
+  Future<Response> deleteWine(String wineId) {
+    return WineClient.instance.dio.post(
+      '/api/wine/delete/$wineId',
+    );
+  }
 }

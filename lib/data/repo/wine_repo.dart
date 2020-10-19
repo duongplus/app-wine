@@ -106,4 +106,24 @@ class WineRepo {
     }
     return c.future;
   }
+
+  Future<int> deleteWine(String wineId) async {
+    Completer c = Completer<int>();
+    try {
+      var response =
+      await _wineService.deleteWine(wineId);
+      print(response.data);
+      var status = response.data['status'];
+      c.complete(status);
+    } on DioError catch (e) {
+      //TODO: Loi network
+      c.completeError(e.response.data);
+      print(e);
+    } catch (e) {
+      //TODO:
+      print(e);
+      c.completeError(e);
+    }
+    return c.future;
+  }
 }

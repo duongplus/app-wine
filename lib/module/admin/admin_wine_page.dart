@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:random_color/random_color.dart';
+import 'package:wine_app/event/admin/admin_delete_wine.dart';
 import 'package:wine_app/module/admin/admin_add_wine_page.dart';
 import 'package:wine_app/module/admin/admin_bloc.dart';
 import 'package:wine_app/module/detail/detail_page.dart';
@@ -11,6 +13,7 @@ import 'package:wine_app/shared/constants.dart';
 import 'package:wine_app/shared/model/cate.dart';
 import 'package:wine_app/shared/model/user_data.dart';
 import 'package:wine_app/shared/model/wine.dart';
+import 'package:wine_app/shared/style/txt_style.dart';
 import 'package:wine_app/shared/widget/normal_button.dart';
 import 'package:wine_app/shared/widget/xoayxoay.dart';
 
@@ -30,7 +33,10 @@ class _WinePageState extends State<WinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quản lý rượu'),
+        iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        backgroundColor: Colors.white,
+        title: Text('Quản lý rượu'.toUpperCase(), style: TextStyle(color:Colors.pink[300]),),
         elevation: 1,
         actions: <Widget>[
           StreamProvider<List<Wine>>.value(
@@ -50,12 +56,13 @@ class _WinePageState extends State<WinePage> {
                 return IconButton(
                   icon: Icon(
                     Icons.search,
-                    color: Colors.white,
+                    color: Colors.pink[300],
                   ),
                   onPressed: () {
                     showSearch(
                         context: context,
-                        delegate: DataSearch(listWine: wines, bloc: widget.bloc));
+                        delegate:
+                            DataSearch(listWine: wines, bloc: widget.bloc));
                   },
                 );
               },
@@ -64,7 +71,7 @@ class _WinePageState extends State<WinePage> {
           IconButton(
             icon: Icon(
               Icons.add,
-              color: Colors.white,
+              color: Colors.pink[300],
             ),
             onPressed: () {
               Navigator.push(
@@ -77,10 +84,36 @@ class _WinePageState extends State<WinePage> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: Body(
-        bloc: widget.bloc,
+      body: StreamProvider<int>.value(
+        initialData: 0,
+        value: widget.bloc.statusStream,
+        child: Consumer<int>(
+          builder: (context, statusCode, child) {
+            if (statusCode == 200) {
+              showMessage('Xóa thành công', Colors.lightGreenAccent);
+              widget.bloc.statusSink.add(0);
+            } else if (statusCode >= 400) {
+              showMessage('Gặp sự cố, mời bạn thử lại', Colors.brown[600]);
+              widget.bloc.statusSink.add(0);
+            }
+            return Body(
+              bloc: widget.bloc,
+            );
+          },
+        ),
       ),
     );
+  }
+
+  showMessage(status, color) {
+    Fluttertoast.showToast(
+        msg: status.toString(),
+        timeInSecForIosWeb: 10,
+        webShowClose: true,
+        toastLength: Toast.LENGTH_LONG,
+        textColor: Colors.white,
+        backgroundColor: color,
+        gravity: ToastGravity.BOTTOM);
   }
 }
 
@@ -151,14 +184,18 @@ class _WinesState extends State<Wines> {
       initialData: cates.length > 0 ? cates[0].cateId : null,
       child: Consumer<String>(
         builder: (context, cid, child) => StreamProvider.value(
-          initialData: ws,
+          initialData: null,
           value: widget.bloc.getStreamWineList(cid),
           child: Consumer<List<Wine>>(
             builder: (context, wines, child) {
               if (wines == null) {
-                return Center(
-                  child: ColorLoader(),
-                );
+               return Center(
+                        child: Image(
+                          image: AssetImage('assets/img/wine_success.gif'),
+                          height: 80,
+                          width: 80,
+                        ),
+                      );
               }
               return Expanded(
                 child: Padding(
@@ -172,21 +209,62 @@ class _WinesState extends State<Wines> {
                         crossAxisSpacing: kDefaultPaddin,
                         childAspectRatio: 0.65,
                       ),
-                      itemBuilder: (context, index) => ItemCard(
-                          wine: wines[index],
-                          press: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AdminWineDetailsScreen(
-                                    product: wines[index],
-                                    bloc: widget.bloc,
-                                  ),
-                                ));
-//                        print(bloc.doingSomething());
-                          }
-
-//                      ),
+                      itemBuilder: (context, index) => Stack(
+                            children: [
+                              ItemCard(
+                                  wine: wines[index],
+                                  press: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AdminWineDetailsScreen(
+                                            product: wines[index],
+                                            bloc: widget.bloc,
+                                          ),
+                                        ));
+                                  }),
+                              Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 40,
+                                      color: Colors.brown[600],
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => new AlertDialog(
+                                                title: new Text("Thông báo"),
+                                                content: new Text(
+                                                    "Bạn muốn xóa rượu này?"),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    child: Text('Không'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                  FlatButton(
+                                                    child: Text('Xóa'),
+                                                    onPressed: () {
+                                                      widget.bloc.event.add(
+                                                          AdminDeleteWine(
+                                                              oid: wines[index]
+                                                                      .id[
+                                                                  '\$oid']));
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              ));
+                                    },
+                                  ))
+                            ],
                           )),
                 ),
               );
@@ -233,8 +311,12 @@ class _CategoriesState extends State<Categories> {
       child: Consumer<Object>(builder: (context, data, child) {
         if (data == null) {
           return Center(
-            child: ColorLoader(),
-          );
+                        child: Image(
+                          image: AssetImage('assets/img/wine_success.gif'),
+                          height: 80,
+                          width: 80,
+                        ),
+                      );
         }
         var cates = data as List<Cate>;
         Cate.cates = cates;
@@ -398,7 +480,11 @@ class DataSearch extends SearchDelegate<String> {
   final List<Wine> listWine;
   AdminBloc bloc;
 
-  DataSearch({this.listWine, this.bloc});
+  DataSearch({this.listWine, this.bloc}): super(
+    searchFieldLabel: 'Rượu...',
+    keyboardType: TextInputType.text,
+    textInputAction: TextInputAction.search,
+  );
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -497,6 +583,95 @@ class DataSearch extends SearchDelegate<String> {
         ),
       ),
       itemCount: suggestionList.length,
+    );
+  }
+}
+
+class CustomDialog extends StatelessWidget {
+  final String title, description, buttonText;
+  final AssetImage image;
+
+  CustomDialog({this.title, this.description, this.buttonText, this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: _dialogContent(context),
+    );
+  }
+
+  Widget _dialogContent(context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(
+            top: 100,
+            bottom: 16,
+            left: 16,
+            right: 16,
+          ),
+          margin: EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(17),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                description,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(buttonText),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                left: 16,
+                right: 16,
+                child: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    radius: 50,
+                    child: Image(image: image)),
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 }

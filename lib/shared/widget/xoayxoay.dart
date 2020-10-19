@@ -29,14 +29,14 @@ class _ColorLoaderState extends State<ColorLoader> with TickerProviderStateMixin
     // controller1 = AnimationController(
     //     duration: const Duration(milliseconds: 1200), vsync: this);
 
-    controller1 = AnimationController(
-        duration: const Duration(milliseconds: 1200), vsync: this);
-
-    controller2 = AnimationController(
-        duration: const Duration(milliseconds: 900), vsync: this);
-
-    controller3 = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+    // controller1 = AnimationController(
+    //     duration: const Duration(milliseconds: 1200), vsync: this);
+    //
+    // controller2 = AnimationController(
+    //     duration: const Duration(milliseconds: 900), vsync: this);
+    //
+    // controller3 = AnimationController(
+    //     duration: const Duration(milliseconds: 2000), vsync: this);
 
     animation1 = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
         parent: controller1,

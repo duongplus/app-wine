@@ -33,7 +33,7 @@ class SwitchPage extends StatelessWidget {
                         builder: (context) => AdminHomePage(),
                       ));
                 },
-                color: Colors.green,
+                color: Colors.pink[300],
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 elevation: 2,
                 shape: RoundedRectangleBorder(
@@ -48,7 +48,7 @@ class SwitchPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, '/home');
                 },
-                color: Colors.green,
+                color: Colors.pink[300],
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 elevation: 2,
                 shape: RoundedRectangleBorder(

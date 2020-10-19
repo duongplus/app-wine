@@ -34,9 +34,12 @@ class AdminHomePage extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        backgroundColor: Colors.white,
           title: Text(
-            "Trang Quản trị",
-            style: TextStyle(color: Colors.white),
+            "Trang Quản trị".toUpperCase(),
+            style: TextStyle(color: Colors.pink[300]),
           ),
         ),
         body: AdminHomeWidget(),

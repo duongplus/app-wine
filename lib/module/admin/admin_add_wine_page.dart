@@ -26,7 +26,10 @@ class AdminAddWineScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Thêm rượu'),
+        title: Text('Thêm rượu'.toUpperCase(), style: TextStyle(color: Colors.pink[300],),),
+        iconTheme: IconThemeData(color: Colors.pink[300]),
+        actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+        backgroundColor: Colors.white,
       ),
       body: Body(
         bloc: bloc,
@@ -101,6 +104,7 @@ class _BodyState extends State<Body> {
         builder: (context, status, child) {
           if(status == 200){
             showMessage('Thêm rượu thành công!', Colors.lightGreenAccent);
+            widget.bloc.statusSink.add(0);
             nameController.text = '';
             producerController.text = '';
             countryController.text = '';
@@ -110,7 +114,6 @@ class _BodyState extends State<Body> {
             priceController.text = '';
             capacityController.text = '';
             sizeController.text = '';
-            widget.bloc.statusSink.add(0);
           } else if (status >= 400){
             showMessage('Gặp sự cố trong quá trình thêm rượu!', Colors.red);
             widget.bloc.statusSink.add(0);
@@ -166,22 +169,26 @@ class _BodyState extends State<Body> {
                 FlatButton(
                   shape:
                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  color: Colors.lightBlueAccent,
+                  color: Colors.pink[300],
                   onPressed: () {
-                    if(nameController.text!='' && priceController.text != '' && alcoholController.text != ''){
-                      Wine wine = Wine(
-                        name: nameController.text,
-                        producer: producerController.text,
-                        country: producerController.text,
-                        alcohol: alcoholController.text + "%",
-                        description: descriptionController.text,
-                        thumbnail: thumbnailController.text,
-                        price: double.parse(priceController.text),
-                        cateId: _selectedCate.cateId,
-                        capacity: int.parse(capacityController.text),
-                        size: sizeController.text + "ml",
-                      );
-                      widget.bloc.event.add(AdminAddWine(wine: wine));
+                    if(nameController.text!='' && priceController.text != '' && alcoholController.text != '' && sizeController.text!=''){
+                     try{
+                       Wine wine = Wine(
+                         name: nameController.text,
+                         producer: producerController.text,
+                         country: producerController.text,
+                         alcohol: alcoholController.text + "%",
+                         description: descriptionController.text,
+                         thumbnail: thumbnailController.text,
+                         price: double.parse(priceController.text),
+                         cateId: _selectedCate.cateId,
+                         capacity: int.parse(capacityController.text),
+                         size: sizeController.text + "ml",
+                       );
+                       widget.bloc.event.add(AdminAddWine(wine: wine));
+                     }catch(e){
+                       showMessage('Không thể thêm rượu',Colors.red);
+                     }
                       return;
                     }
                     showMessage('Không thể thêm rượu',Colors.red);

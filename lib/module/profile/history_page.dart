@@ -21,7 +21,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreenAccent,
-        title: Text('Lịch sử giao dịch'),
+        title: Text('Lịch sử giao dịch'.toUpperCase()),
       ),
       body: StreamProvider<List<Revenue>>.value(
         value: widget.bloc.getStreamHistories(),
@@ -30,14 +30,21 @@ class _HistoryPageState extends State<HistoryPage> {
           builder: (context, list, child) {
             if (list == null) {
               return Center(
-                child: ColorLoader(),
+                child: Image(
+                  image: AssetImage('assets/img/wine_success.gif'),
+                  height: 80,
+                  width: 80,
+                ),
               );
             }
             return Container(
               child: ListView.separated(
                 reverse: true,
                 itemCount: list.length,
-                separatorBuilder: (context, index) => Container(height: 1, color: Colors.grey,),
+                separatorBuilder: (context, index) => Container(
+                  height: 1,
+                  color: Colors.grey,
+                ),
                 itemBuilder: (context, index) => _buildItemList(list[index]),
               ),
             );
@@ -48,9 +55,9 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _buildItemList(Revenue revenue) {
-    double point = revenue.total/100000;
+    double point = revenue.total / 100000;
     int amount = 0;
-    for(var i=0; i< revenue.wines.length; i++){
+    for (var i = 0; i < revenue.wines.length; i++) {
       amount += revenue.wines[i].amount;
     }
     return ListTile(
@@ -58,7 +65,10 @@ class _HistoryPageState extends State<HistoryPage> {
         '${revenue.date.toString()}',
         style: TextStyle(fontSize: 16, color: Colors.black),
       ),
-      trailing: Text('Điểm: ${point.toStringAsFixed(point.truncateToDouble() == point ? 0 : 2)}\nSố lượng: ${amount}', style: TextStyle(color: Colors.grey, fontSize: 12),),
+      trailing: Text(
+        'Điểm: ${point.toStringAsFixed(point.truncateToDouble() == point ? 0 : 2)}\nSố lượng: ${amount}',
+        style: TextStyle(color: Colors.grey, fontSize: 12),
+      ),
       subtitle: Container(
         height: 60,
         width: 100,

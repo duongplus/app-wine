@@ -58,7 +58,10 @@ class _AdminRevenueWidgetState extends State<AdminRevenueWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Doanh thu'),
+          iconTheme: IconThemeData(color: Colors.pink[300]),
+          actionsIconTheme: IconThemeData(color: Colors.pink[300]),
+          backgroundColor: Colors.white,
+          title: Text('Doanh thu'.toUpperCase(), style: TextStyle(color:Colors.pink[300],),),
           actions: <Widget>[
             Center(child: Text('Tháng')),
             Center(
@@ -88,7 +91,13 @@ class _AdminRevenueWidgetState extends State<AdminRevenueWidget> {
         child: Consumer<List<Revenue>>(
           builder: (context, list, child) {
             if (list == null) {
-              return Center(child: ColorLoader());
+              return Center(
+                child: Image(
+                  image: AssetImage('assets/img/wine_success.gif'),
+                  height: 80,
+                  width: 80,
+                ),
+              );
             }
             double netTotal = 0;
             double total = 0;
