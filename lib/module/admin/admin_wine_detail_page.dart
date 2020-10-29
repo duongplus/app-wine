@@ -116,7 +116,7 @@ class Body extends StatelessWidget {
                       size: sizeController.text,
                     );
                     bloc.event.add(AdminUpdateWine(wine: wine));
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
                   },
                   child: Text(
                     "Lưu thay đổi".toUpperCase(),

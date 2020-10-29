@@ -5,7 +5,14 @@ import 'package:wine_app/shared/constant.dart';
 class WineClient {
   static BaseOptions _options = new BaseOptions(
     // baseUrl: "http://localhost:8000",
-    baseUrl: "http://192.168.56.1:8000",
+    baseUrl: "http://172.20.10.4:8000",
+    // headers: {
+    //   "Access-Control-Allow-Origin":"http://192.168.1.11:8000",
+    //   "Access-Control-Allow-Header":"Origin, X-Requested-With, Content-Type, Accept",
+    //   "Content-Type": "application/json",
+    //   "Accept": "application/json",
+    // },
+    // contentType: "application/json",
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
